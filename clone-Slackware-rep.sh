@@ -76,7 +76,7 @@ echo -e " the source code from \"$mirrorSource\""
 echo -en "\n\tWant continue?\n\t(y)es - (n)o: "
 read contineLftp
 
-if [ $contineLftp == 'n' ]; then
+if [ "$contineLftp" == 'n' ]; then
     echo -e "\nJust exiting by user choice\n"
 else
     echo -e "\n\nPlease wait until download ends...\n"
