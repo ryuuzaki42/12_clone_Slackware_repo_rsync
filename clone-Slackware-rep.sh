@@ -24,34 +24,47 @@
 #
 # Last update: 03/11/2016
 #
-# Tip: Use the file insed one "old" ISO to make less things to download
+# Tip: Use the file inside one "old" ISO to make less things to download
+
+# Some colors for script output - Make it easier to follow
+BLACK='\e[1;30m'
+RED='\e[1;31m'
+GREEN='\e[1;32m'
+NC='\033[0m' # reset/no color
+BLUE='\e[1;34m'
+PINK='\e[1;35m'
+CYAN='\e[1;36m'
+WHITE='\e[1;37m'
+
+## To test color uncomment the next line
+#echo -e "\n\tTest colors: $RED RED $WHITE WHITE $PINK PINK $BLACK BLACK $BLUE BLUE $GREEN GREEN $CYAN CYAN $NC NC\n"
 
 mirrorSource="ftp://ftp.osuosl.org/.2/slackware/"
 
-echo -e "\nDefault mirror: $mirrorSource"
+echo -e "$CYAN\nDefault mirror:$GREEN $mirrorSource$NC"
 
-echo -en "\nWant change de default mirror?\n(y)es - (n)o (enter to no): "
+echo -en "$CYAN\nWant change the mirror?$NC\n(y)es - (n)o $GREEN(press enter to no):$NC "
 read changeMirror
 
 if [ "$changeMirror" == 'y' ]; then
     mirrorSource=''
 
     while echo "$mirrorSource" | grep -v -q -E "ftp|http"; do
-        echo -en "\nInsert the new mirror: "
+        echo -en "$CYAN \nType the new mirror:$NC "
         read mirrorSource
     done
 
-    echo -e "\nNew mirror: $mirrorSource\n"
+    echo -e "$CYAN\nNew mirror:$GREEN $mirrorSource$NC\n"
 fi
 
-echo -en "\nWith version Slackware you want? (enter to 14.2): "
+echo -en "$CYAN\nWith version Slackware you want? $GREEN(press enter to 14.2):$NC "
 read versioSlackware
 
 if [ "$versioSlackware" == '' ]; then
     versioSlackware="14.2"
 fi
 
-echo -en "\nWith arch you want? \n(1) - 32 bits or (2) to 64 bits (enter to 64 bits): "
+echo -en "$CYAN\nWith arch you want?$NC\n(1) - 32 bits or (2) to 64 bits $GREEN(press enter to 64 bits):$NC "
 read choosedArch
 
 if [ "$choosedArch" == '1' ]; then
@@ -62,24 +75,37 @@ fi
 
 versionDownload=slackware$choosedArch-$versioSlackware
 
-echo -en "\nWant download the source code?\n(y)es - (n)o (enter to no): "
+echo -en "$CYAN\nWant download the source code?$NC\n(y)es - (n)o $GREEN(press enter to no):$NC "
 read downloadSource
 
-echo -en "\nWill download (by lftp) \"$versionDownload\" "
+echo -en "$CYAN\nWill download (by lftp) $GREEN\"$versionDownload\"$CYAN"
 if [ "$downloadSource" == 'y' ]; then
-    echo -n "with"
+    echo -en "$RED with $CYAN"
 else
-    echo -n "without"
+    echo -en "$RED without $CYAN"
 fi
-echo -e " the source code from \"$mirrorSource\""
+echo -e "the$BLUE source code$CYAN from $GREEN\"$mirrorSource\"$NC"
 
-echo -en "\nWant continue?\n(y)es - (n)o (enter to yes): "
+echo -en "$CYAN\nWant continue?$NC\n(y)es - (n)o $GREEN(press enter to yes):$NC "
 read contineLftp
 
 if [ "$contineLftp" == 'n' ]; then
-    echo -e "\nJust exiting by user choice\n"
+    echo -e "$CYAN\nJust exiting by user choice\n$NC"
 else
-    echo -e "\nDownloading files\nPlease wait...\n"
+    if [ -e $versionDownload/ ]; then
+        echo -e "$CYAN\nOlder folder download found ($GREEN$versionDownload/$CYAN)$NC"
+        tmpMd5sumBeforeDownload=`mktemp`
+
+        listOfFilesBeforeDownload=`find $versionDownload/ -type f -print`
+
+        echo -en "$CYAN\nCreating a$BLUE md5sum$CYAN from files found (in folder $GREEN$versionDownload/$CYAN)$NC. Please wait..."
+        for file in $listOfFilesBeforeDownload; do
+            md5sum $file >> $tmpMd5sumBeforeDownload
+        done
+        echo -e "$CYAN\n\nThe$BLUE md5sum$RED (before the download)$CYAN was saved in the tmp file : $GREEN$tmpMd5sumBeforeDownload$NC"
+    fi
+
+    echo -en "$CYAN\nDownloading files$NC. Please wait...\n\n"
 
     if [ "$downloadSource" == 'y' ]; then
         lftp -c 'open '$mirrorSource'; mirror -c -e '$versionDownload'/'
@@ -89,13 +115,76 @@ else
         lftp -c 'open '$mirrorSource'; mirror -c -e --exclude source/ --exclude patches/source/ '$versionDownload'/'
     fi
 
+    if [ "$tmpMd5sumBeforeDownload" != '' ]; then
+        tmpMd5sumAfterDownload=`mktemp`
+
+        listOfFilesAfterDownload=`find $versionDownload/ -type f -print`
+
+        echo -en "$CYAN\nCreating a md5sum after the download ($versionDownload/)$NC\nPlease wait..."
+        for file in $listOfFilesAfterDownload; do
+            md5sum $file >> $tmpMd5sumAfterDownload
+        done
+        echo -e "$CYAN\n\nThe$BLUE md5sum$RED (after the download)$CYAN was saved in the tmp file : $GREEN$tmpMd5sumAfterDownload$NC"
+
+        echo -en "$CYAN\nChecking the changes in the file$RED before$CYAN with$BLUE after$CYAN download $NC\nPlease wait..."
+        changeResult=`diff -w $tmpMd5sumBeforeDownload $tmpMd5sumAfterDownload`
+
+        if [ "$changeResult" == '' ]; then
+            echo -e "$CYAN\nNone changes made in the local folder - All file still the same after de download$NC\n"
+        else
+            echo -e "$RED\n\nChanges made in local files:$NC"
+
+            diffBeforeDownload=`diff -u $tmpMd5sumBeforeDownload $tmpMd5sumAfterDownload | grep -v "^--" | grep "^-" | awk '{print $2}'`
+            diffAfterDownload=`diff -u $tmpMd5sumBeforeDownload $tmpMd5sumAfterDownload | grep -v "^++" | grep "^+" | awk '{print $2}'`
+
+            for lineA in `echo $diffBeforeDownload`; do
+                for lineB in `echo $diffAfterDownload`; do
+                    if [ "$lineA" == "$lineB" ]; then
+                        filesUpdate+=$lineA\|
+                    fi
+                done
+            done
+
+            if [ "$filesUpdate" != '' ]; then
+                echo -e "$GREEN\nFile(s) updated:$NC"
+                echo "$filesUpdate" | sed 's/|/\n/g'
+            fi
+
+            for lineA in `echo $diffBeforeDownload`; do
+                diffLineDeleted=`echo $diffAfterDownload | grep $lineA`
+                if [ "$diffLineDeleted" == '' ]; then
+                    filesDeleted+=$lineA\|
+                fi
+            done
+
+            if [ "$filesDeleted" != '' ]; then
+                echo -e "$RED\nFile(s) deleted:$NC"
+                echo "$filesDeleted" | sed 's/|/\n/g'
+            fi
+
+            for lineB in `echo $diffAfterDownload`; do
+                diffLineNewFiles=`echo $diffBeforeDownload | grep $lineB`
+                if [ "$diffLineNewFiles" == '' ]; then
+                    filesNew+=$lineB\|
+                fi
+            done
+
+            if [ "$filesNew" != '' ]; then
+                echo -e "$CYAN\nNew file(s) downloaded:$NC"
+                echo "$filesNew" | sed 's/|/\n/g'
+            fi
+        fi
+
+        rm $tmpMd5sumBeforeDownload $tmpMd5sumAfterDownload
+    fi
+
     cd $versionDownload/
 
-    echo -en "\nWant check the integrity of downloaded files?\n(y)es - (n)o (enter to no): "
+    echo -en "$CYAN\nWant check the integrity of downloaded files with the server?$NC\n(y)es - (n)o $GREEN(press enter to no):$NC "
     read checkFiles
 
     if [ "$checkFiles" == 'y' ]; then
-        echo -e "\nChecking the integrity of the files\nPlease wait...\n"
+        echo -en "$CYAN\nChecking the integrity of the files.$NC Please wait..."
         if [ "$downloadSource" == 'y' ]; then
             checkFilesResult=`tail +13 CHECKSUMS.md5 | md5sum -c --quiet`
         else
@@ -103,16 +192,16 @@ else
         fi
 
         if [ "$checkFilesResult" == '' ]; then
-            echo -e "\nFiles integrity: Good - files are equal to the server\n"
+            echo -e "$CYAN\n\nFiles integrity:$GREEN Good$NC - files are equal to the server"
         else
-            echo -e "\nFiles integrity: Bad - files different from the server\n"
-            echo -e "$checkFilesResult"
+            echo -e "$CYAN\n\nFiles integrity:$RED Bad$NC - files different from the server"
+            echo -e "$RED$checkFilesResult$NC"
         fi
     fi
 
     cd ..
 
-    echo -en "\nWant create a ISO file from downloaded folder?\n(y)es - (n)o (enter to no): "
+    echo -en "$CYAN\nWant create a ISO file from downloaded folder?$NC\n(y)es - (n)o $GREEN(press enter to no):$NC "
     read generateISO
 
     datePartName=`date +%Hh-%Mmin-%dday-%mmouth-%Yyear`
@@ -122,8 +211,8 @@ else
         olderIsoSlackware=`ls | grep "slackware.*iso"`
 
         if [ "$olderIsoSlackware" != '' ]; then
-            echo -e "\nOlder ISO file slackware:\n$olderIsoSlackware"
-            echo -en "\nDelete those older ISO files before continue?\n(y)es - (n)o (enter to no): "
+            echo -e "$CYAN\nOlder ISO file slackware found:$GREEN $olderIsoSlackware$NC"
+            echo -en "$CYAN\nDelete these older ISO file(s) before continue?$NC\n(y)es - (n)o $GREEN(press enter to no):$NC "
             read deleteOlderIso
 
             if [ "$deleteOlderIso" == 'y' ]; then
@@ -131,7 +220,7 @@ else
             fi
         fi
 
-        echo -e "\nCreating ISO file\nPlease wait...\n"
+        echo -en "$CYAN\nCreating ISO file.$NC Please wait..."
 
         mkisofs -pad -r -J -quiet -o $isoFileName.iso $versionDownload/
         # -pad   Pad output to a multiple of 32k (default)
@@ -140,8 +229,8 @@ else
         # -quiet Run quietly
         # -o     Set output file name
 
-        echo -e "\nThe file \"$isoFileName.iso\" was generated by the folder $versionDownload/\n"
+        echo -e "$CYAN\n\nThe file $GREEN\"$isoFileName.iso\"$CYAN was generated by the folder $GREEN$versionDownload/$NC\n"
     else
-        echo -e "\n\nExiting...\n\nIf you want create a ISO file use:\nmkisofs -pad -r -J -o $isoFileName.iso $versionDownload/\n"
+        echo -e "$CYAN\n\nExiting...$GREEN\n\nIf you want create a ISO file, use:$NC\nmkisofs -pad -r -J -o $isoFileName.iso $versionDownload/\n"
     fi
 fi
