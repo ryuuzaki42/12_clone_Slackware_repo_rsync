@@ -22,7 +22,7 @@
 #
 # Script: Clone some Slackware repository to a local source
 #
-# Last update: 04/11/2016
+# Last update: 07/11/2016
 #
 # Tip: Use the file inside one "old" ISO to make less things to download
 
@@ -115,17 +115,14 @@ else
         changeLogMd5sumResult=`echo -e "$checkChangeLogMd5sum" | awk '{print $2}'`
 
         echo -en "$CYAN\nThe$BLUE ChangeLog.txt$CYAN in the server is"
+        contineOrJump='y'
         if [ "$changeLogMd5sumResult" == "OK" ]; then
             rm ChangeLog.txt
 
             echo -e "$GREEN equal$CYAN with the$BLUE ChangeLog.txt$CYAN in local folder$NC"
-            echo -en "$CYAN\nWant continue the download or just exit?$NC\n(y)es to continue - (n)o to exit $GREEN(press enter to no):$NC "
-            read contineOrExit
+            echo -en "$CYAN\nWant continue/force the download or jump the download step?$NC\n(y)es to continue - (n)o to jump $GREEN(press enter to no):$NC "
+            read contineOrJump
 
-            if [ "$contineOrExit" == 'n' ] || [ "$contineOrExit" == '' ]; then
-                echo -e "$CYAN\nJust exiting by user choice$NC\n"
-                exit 0
-            fi
         else # $changeLogMd5sumResult == FAILED
             echo -e "$RED different$CYAN from the$BLUE ChangeLog.txt$CYAN in local folder$NC"
             echo -en "$CYAN\nWant view the diff between these files?$NC\n(y)es - (n)o $GREEN(press enter to no):$NC "
@@ -138,25 +135,29 @@ else
             rm ChangeLog.txt
         fi
 
-        tmpMd5sumBeforeDownload=`mktemp`
+        if [ "$contineOrJump" == 'y' ]; then
+            tmpMd5sumBeforeDownload=`mktemp`
 
-        listOfFilesBeforeDownload=`find $versionDownload/ -type f -print`
+            listOfFilesBeforeDownload=`find $versionDownload/ -type f -print`
 
-        echo -en "$CYAN\nCreating a$BLUE md5sum$RED (before the download)$CYAN from files found (in the folder $GREEN$versionDownload/$CYAN)$NC. Please wait..."
-        for file in $listOfFilesBeforeDownload; do
-            md5sum $file >> $tmpMd5sumBeforeDownload
-        done
-        echo -e "$CYAN\n\nThe$BLUE md5sum$RED (before the download)$CYAN was saved in the tmp file: $GREEN$tmpMd5sumBeforeDownload$NC"
+            echo -en "$CYAN\nCreating a$BLUE md5sum$RED (before the download)$CYAN from files found (in the folder $GREEN$versionDownload/$CYAN)$NC. Please wait..."
+            for file in $listOfFilesBeforeDownload; do
+                md5sum $file >> $tmpMd5sumBeforeDownload
+            done
+            echo -e "$CYAN\n\nThe$BLUE md5sum$RED (before the download)$CYAN was saved in the tmp file: $GREEN$tmpMd5sumBeforeDownload$NC"
+        fi
     fi
 
-    echo -en "$CYAN\nDownloading files$NC. Please wait...\n\n"
+    if [ "$contineOrJump" == 'y' ]; then
+        echo -en "$CYAN\nDownloading files$NC. Please wait...\n\n"
 
-    if [ "$downloadSource" == 'y' ]; then
-        lftp -c 'open '$mirrorSource'; mirror -c -e '$versionDownload'/'
-        # -c continue a mirror job if possible
-        # -e delete files not present at remote site
-    else
-        lftp -c 'open '$mirrorSource'; mirror -c -e --exclude source/ --exclude patches/source/ '$versionDownload'/'
+        if [ "$downloadSource" == 'y' ]; then
+            lftp -c 'open '$mirrorSource'; mirror -c -e '$versionDownload'/'
+            # -c continue a mirror job if possible
+            # -e delete files not present at remote site
+        else
+            lftp -c 'open '$mirrorSource'; mirror -c -e --exclude source/ --exclude patches/source/ '$versionDownload'/'
+        fi
     fi
 
     if [ "$tmpMd5sumBeforeDownload" != '' ]; then
