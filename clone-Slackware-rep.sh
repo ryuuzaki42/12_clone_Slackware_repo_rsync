@@ -22,7 +22,7 @@
 #
 # Script: Clone some Slackware repository to a local source
 #
-# Last update: 07/11/2016
+# Last update: 22/11/2016
 #
 # Tip: Use the file inside one "old" ISO to make less things to download
 
@@ -59,6 +59,10 @@ if [ "$changeMirror" == 'y' ]; then
     while echo "$mirrorSource" | grep -v -q -E "ftp|http"; do
         echo -en "$CYAN \nType the new mirror:$NC "
         read mirrorSource
+
+        if echo "$mirrorSource" | grep -v -q -E "ftp|http"; then
+            echo -e "$RED\nError: the mirror \"$mirrorSource\" is not valid.\nOne valid mirror has \"ftp\" or \"http\"$NC"
+        fi
     done
 
     echo -e "$CYAN\nNew mirror:$GREEN $mirrorSource$NC\n"
