@@ -69,10 +69,10 @@ if [ "$changeMirror" == 'y' ]; then
 fi
 
 echo -en "$CYAN\nWith version Slackware you want? $GREEN(press enter to 14.2):$NC "
-read versioSlackware
+read versionSlackware
 
-if [ "$versioSlackware" == '' ]; then
-    versioSlackware="14.2"
+if [ "$versionSlackware" == '' ]; then
+    versionSlackware="14.2"
 fi
 
 echo -en "$CYAN\nWith arch you want?$NC\n(1) - 32 bits or (2) to 64 bits $GREEN(press enter to 64 bits):$NC "
@@ -84,7 +84,7 @@ else
     choosedArch="64"
 fi
 
-versionDownload=slackware$choosedArch-$versioSlackware
+versionDownload=slackware$choosedArch-$versionSlackware
 
 echo -en "$CYAN\nWant download the source code?$NC\n(y)es - (n)o $GREEN(press enter to no):$NC "
 read downloadSource
