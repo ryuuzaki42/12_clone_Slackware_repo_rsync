@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Autor= João Batista Ribeiro
 # Bugs, Agradecimentos, Criticas "construtivas"
@@ -32,9 +32,14 @@ if [ "$folderWork" == '' ]; then
 elif [ ! -d "$folderWork" ]; then
     echo -e "\nError: The dictory \"$folderWork\" not exist\n"
 else
-    ## Add the packages you want in the packagesList
+    folderWork=`echo $folderWork | sed "s/\///g"` # Remove the / in the end
+    cd $folderWork
 
-    ## Remover games
+    folderDeletedFiles="../toBeDeleted"`date +%s`
+    mkdir $folderDeletedFiles 2> /dev/null
+
+    ## Add the packages you want in the packagesList
+    # Remover games
     packagesList="palapeli bomber granatier
     kblocks ksnakeduel kbounce kbreakout kgoldrunner
     kspaceduel kapman kolf kollision kpat lskat blinken
@@ -47,61 +52,49 @@ else
     # Remover servidor X - Leave fluxbox # Safe propose
     packagesList=$packagesList" twm blackbox windowmaker fvwm xfce"
 
-    #Remover kopote
+    # Remover kopote
     packagesList=$packagesList" kdenetwork kdenetwork-filesharing kdenetwork-strigi-analyzers kopete"
 
-    ## Remove nepomuk
+    # Remove nepomuk
     packagesList=$packagesList" nepomuk nepomuk-core nepomuk-widgets"
 
-    ## Remove akonadi
+    # Remove akonadi
     packagesList=$packagesList" akonadi"
 
-    ## Remove gnome "packages"
+    # Remove gnome "packages"
     packagesList=$packagesList" gcr polkit-gnome gnome-themes gnome-keyring libgnome-keyring"
 
-    ## Remove other packages
+    # Remove other packages
     packagesList=$packagesList" seamonkey pidgin xchat dragon thunderbird kplayer
     calligra bluedevil blueman bluez bluez-firmware xine-lib xine-ui
     vim-gvim vim sendmail sendmail-cf xpdf tetex tetex-doc kget"
 
-    filesDeleted="0_filesDeleted.txt"
-    filesNotFound="0_filesNotFound.txt"
+    filesDeleted="../0_filesDeleted.txt"
+    filesNotFound="../0_filesNotFound.txt"
 
     for packageName in $packagesList; do
-        echo "Looking for \"$packageName\""
-        resultFind=`find $folderWork | grep $packageName`
+        echo -e "\nLooking for \"$packageName\""
+        resultFind=`find . | grep $packageName`
 
         if [ "$resultFind" == '' ]; then
-            echo "    Not found: \"$packageName\"" | tee -a $filesNotFound
+            echo "Not found: \"$packageName\"" | tee -a $filesNotFound
         else
-            echo -e "    Files removed: \"$packageName\"\n $resultFind\n\n" | tee -a $filesDeleted
-            mkdir toBeDeleted 2> /dev/null
-            mv $resultFind toBeDeleted/
+            echo -e "Files removed: \"$packageName\"\n$resultFind\n" | tee -a $filesDeleted
+            mv $resultFind $folderDeletedFiles
         fi
     done
 
-    echo -en "$CYAN\n\nWant create a ISO file from work folder?\n(y)es - (n)o (press enter to no): "
+    echo -e "\nFiles \"toBeDeleted\" are moved to \"$folderDeletedFiles\""
+
+    echo -en "\nWant create a ISO file from work folder?\n(y)es - (n)o (press enter to no): "
     read generateISO
 
-    datePartName=`date +%Hh-%Mmin-%dday-%mmouth-%Yyear`
-    isoFileName=$folderWork\_date-$datePartName
-
     if [ "$generateISO" == 'y' ]; then
-        olderIsoSlackware=`ls | grep "slackware.*iso"`
-
-        if [ "$olderIsoSlackware" != '' ]; then
-            echo -e "\nOlder ISO file slackware found: $olderIsoSlackware$NC"
-            echo -en "\nDelete the older ISO file(s) before continue?\n(y)es - (n)o (press enter to no): "
-            read deleteOlderIso
-
-            if [ "$deleteOlderIso" == 'y' ]; then
-                rm slackware*.iso
-            fi
-        fi
+        cd ../
+        isoFileName="$folderWork""_date_"`date +%s`
 
         echo -en "\nCreating ISO file. Please wait..."
-
-        mkisofs -pad -r -J -quiet -o $isoFileName.iso $folderWork
+        mkisofs -pad -r -J -quiet -o "$isoFileName".iso "$folderWork"
         # -pad   Pad output to a multiple of 32k (default)
         # -r     Generate rationalized Rock Ridge directory information
         # -J     Generate Joliet directory information
