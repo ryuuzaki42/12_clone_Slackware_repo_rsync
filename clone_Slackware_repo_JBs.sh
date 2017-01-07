@@ -22,7 +22,7 @@
 #
 # Script: Clone some Slackware repository to a local source
 #
-# Last update: 22/11/2016
+# Last update: 07/01/2017
 #
 # Tip: Use the file inside one "old" ISO to make less things to download
 
@@ -47,7 +47,6 @@ if [ "$input1" == "testColor" ]; then
 fi
 
 mirrorSource="ftp://ftp.osuosl.org/.2/slackware/"
-
 echo -e "$CYAN\nDefault mirror:$GREEN $mirrorSource$NC"
 
 echo -en "$CYAN\nWant change the mirror?$NC\n(y)es - (n)o $GREEN(press enter to no):$NC "
@@ -64,7 +63,6 @@ if [ "$changeMirror" == 'y' ]; then
             echo -e "$RED\nError: the mirror \"$mirrorSource\" is not valid.\nOne valid mirror has \"ftp\" or \"http\"$NC"
         fi
     done
-
     echo -e "$CYAN\nNew mirror:$GREEN $mirrorSource$NC\n"
 fi
 
@@ -254,10 +252,10 @@ else
     echo -en "$CYAN\n\nWant create a ISO file from downloaded folder?$NC\n(y)es - (n)o $GREEN(press enter to no):$NC "
     read generateISO
 
-    datePartName=`date +%Hh-%Mmin-%dday-%mmouth-%Yyear`
-    isoFileName=$versionDownload\_date-$datePartName
-
     if [ "$generateISO" == 'y' ]; then
+        datePartName=`date +%Hh-%Mmin-%dday-%mmouth-%Yyear`
+        isoFileName=$versionDownload\_date-$datePartName
+
         olderIsoSlackware=`ls | grep "slackware.*iso"`
 
         if [ "$olderIsoSlackware" != '' ]; then
@@ -271,8 +269,7 @@ else
         fi
 
         echo -en "$CYAN\nCreating ISO file.$NC Please wait..."
-
-        mkisofs -pad -r -J -quiet -o $isoFileName.iso $versionDownload/
+        mkisofs -pad -r -J -quiet -o "$isoFileName".iso "$versionDownload"/
         # -pad   Pad output to a multiple of 32k (default)
         # -r     Generate rationalized Rock Ridge directory information
         # -J     Generate Joliet directory information
