@@ -53,21 +53,21 @@ else
     packagesList=$packagesList" twm blackbox windowmaker fvwm xfce"
 
     # Remover kopote
-    packagesList=$packagesList" kdenetwork kdenetwork-filesharing kdenetwork-strigi-analyzers kopete"
+    packagesList=$packagesList" kdenetwork-filesharing kdenetwork-strigi-analyzers kopete"
 
     # Remove nepomuk
-    packagesList=$packagesList" nepomuk nepomuk-core nepomuk-widgets"
+    packagesList=$packagesList" nepomuk-core nepomuk-widgets"
 
     # Remove akonadi
     packagesList=$packagesList" akonadi"
 
     # Remove gnome "packages"
-    packagesList=$packagesList" gcr polkit-gnome gnome-themes gnome-keyring libgnome-keyring"
+    packagesList=$packagesList" gcr polkit-gnome gnome-themes libgnome-keyring gnome-keyring"
 
     # Remove other packages
     packagesList=$packagesList" seamonkey pidgin xchat dragon thunderbird kplayer
-    calligra bluedevil blueman bluez bluez-firmware xine-lib xine-ui
-    vim-gvim vim sendmail sendmail-cf xpdf tetex tetex-doc kget"
+    calligra bluedevil blueman bluez-firmware bluez xine-lib xine-ui
+    vim-gvim vim sendmail-cf sendmail xpdf tetex-doc tetex kget"
 
     filesDeleted="../0_filesDeleted.txt"
     filesNotFound="../0_filesNotFound.txt"
