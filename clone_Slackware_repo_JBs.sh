@@ -22,7 +22,7 @@
 #
 # Script: Clone some Slackware repository to a local source
 #
-# Last update: 07/01/2017
+# Last update: 08/01/2017
 #
 # Tip: Use the file inside one "old" ISO to make less things to download
 
@@ -148,6 +148,8 @@ else
             done
             echo -e "$CYAN\n\nThe$BLUE md5sum$RED (before the download)$CYAN was saved in the tmp file: $GREEN$tmpMd5sumBeforeDownload$NC"
         fi
+    else
+        contineOrJump="y"
     fi
 
     if [ "$contineOrJump" == 'y' ]; then
