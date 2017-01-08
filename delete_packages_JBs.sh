@@ -63,12 +63,13 @@ else
     # Remove akonadi
     packagesList=$packagesList" akonadi"
 
-    # Remove gnome "packages"
-    packagesList=$packagesList" gcr polkit-gnome gnome-themes libgnome-keyring gnome-keyring"
+    # Remove gnome "packages" # gcr- to not remove libgcrypt
+    packagesList=$packagesList" gcr- polkit-gnome gnome-themes libgnome-keyring gnome-keyring"
 
     # Remove other packages
     packagesList=$packagesList" seamonkey pidgin xchat dragon thunderbird kplayer
     calligra bluedevil blueman bluez-firmware bluez xine-lib xine-ui
+    kdei emacs amarok audacious
     vim-gvim vim sendmail-cf sendmail xpdf tetex-doc tetex kget"
 
     filesDeleted="../0_filesDeleted.txt"
