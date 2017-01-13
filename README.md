@@ -5,4 +5,3 @@ Clone Slackware mirror to a local folder
 
 ## Use:
  ./clone_Slackware_repo_JBs.sh
- 
