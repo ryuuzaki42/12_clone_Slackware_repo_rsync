@@ -22,7 +22,7 @@
 #
 # Script: Delete package from a local directory that you don't want
 #
-# Last update: 07/01/2017
+# Last update: 15/01/2017
 #
 # Tip: Add the packages you want in the packagesList
 # Need one space before add more
@@ -65,6 +65,9 @@ else
 
     # Remove gnome "packages" # gcr- to not remove libgcrypt
     packagesList=$packagesList" gcr- polkit-gnome gnome-themes libgnome-keyring gnome-keyring"
+
+    # Remove ktorrent
+    packagesList=$packagesList" ktorrent libktorrent"
 
     # Remove other packages
     packagesList=$packagesList" seamonkey pidgin xchat dragon thunderbird kplayer
