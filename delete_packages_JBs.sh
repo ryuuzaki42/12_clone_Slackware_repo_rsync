@@ -22,7 +22,7 @@
 #
 # Script: Delete package from a local directory that you don't want
 #
-# Last update: 15/01/2017
+# Last update: 28/01/2017
 #
 # Tip: Add the packages you want in the packagesList
 # Need one space before add more
@@ -39,7 +39,11 @@ else
     folderDeletedFiles="../toBeDeleted"`date +%s`
     mkdir $folderDeletedFiles 2> /dev/null
 
-    ## Add the packages you want in the packagesList
+    ## Add packages that you want in the packagesList
+    ## Need one space before add more
+    ## For example: Remove ktorrent
+    # packagesList=$packagesList" ktorrent libktorrent"
+
     # Remover games
     packagesList="palapeli bomber granatier
     kblocks ksnakeduel kbounce kbreakout kgoldrunner
@@ -51,7 +55,6 @@ else
     klines konquest ksirk knavalbattle kanagram amor kajongg"
 
     # Remover servidor X - Leave fluxbox # Safe propose
-    ## Need one space before add more
     packagesList=$packagesList" twm blackbox windowmaker fvwm xfce"
 
     # Remover kopote
@@ -65,9 +68,6 @@ else
 
     # Remove gnome "packages" # gcr- to not remove libgcrypt
     packagesList=$packagesList" gcr- polkit-gnome gnome-themes libgnome-keyring gnome-keyring"
-
-    # Remove ktorrent
-    packagesList=$packagesList" ktorrent libktorrent"
 
     # Remove other packages
     packagesList=$packagesList" seamonkey pidgin xchat dragon thunderbird kplayer
