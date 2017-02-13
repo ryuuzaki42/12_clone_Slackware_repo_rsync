@@ -22,10 +22,12 @@
 #
 # Script: Delete package from a local directory that you don't want
 #
-# Last update: 28/01/2017
+# Last update: 13/02/2017
 #
 # Tip: Add the packages you want in the packagesList
 # Need one space before add more
+#
+echo -e "\nThis script \"delete\"/\"move\" packages from a Clone folder\n"
 
 folderWork=$1
 if [ "$folderWork" == '' ]; then
@@ -54,8 +56,19 @@ else
     kjumpingcube kmines knetwalk killbots klickety
     klines konquest ksirk knavalbattle kanagram amor kajongg"
 
+    # Remove XFCE or/and KDE
+	echo -en "\nLeave XFCE or KDE?\n(1) Leave XFCE, (2) Leave KDE, (3) Remove XFCE and KDE (hit enter to remove KDE): "
+    read leaveXGUI
+    if [ "$leaveXGUI" == '1' ] || [ "$leaveXGUI" == '' ]; then
+        packagesList=$packagesList" kde" # Also remove kdei
+    elif [ "$leaveXGUI" == '2' ]; then
+        packagesList=$packagesList" xfce"
+    else
+        packagesList=$packagesList" kde xfce" # Also remove kdei
+    fi
+
     # Remover servidor X - Leave fluxbox # Safe propose
-    packagesList=$packagesList" twm blackbox windowmaker fvwm xfce"
+    packagesList=$packagesList" twm blackbox windowmaker fvwm"
 
     # Remover kopote
     packagesList=$packagesList" kdenetwork-filesharing kdenetwork-strigi-analyzers kopete"
@@ -66,14 +79,24 @@ else
     # Remove akonadi
     packagesList=$packagesList" akonadi"
 
-    # Remove gnome "packages" # gcr- to not remove libgcrypt
-    packagesList=$packagesList" gcr- polkit-gnome gnome-themes libgnome-keyring gnome-keyring"
+    echo -e "\n\nRemove \"gnome packages\"?\"gcr- polkit-gnome gnome-themes libgnome-keyring gnome-keyring\""
+    echo -en "Recommended if you remove XFCE, but leave if you not remove XFCE\n(y)es remove - (n)ot remove: "
+    read removeGnomePackages
+    if [ "$removeGnomePackages" == 'y']; then
+        # Remove gnome "packages" # gcr- to not remove libgcrypt
+        packagesList=$packagesList" gcr- polkit-gnome gnome-themes libgnome-keyring gnome-keyring"
+    else
+        echo -e "\nNot removing \"gnome packages\"\n"
+    fi
 
     # Remove other packages
     packagesList=$packagesList" seamonkey pidgin xchat dragon thunderbird kplayer
     calligra bluedevil blueman bluez-firmware bluez xine-lib xine-ui
-    kdei emacs amarok audacious
+    emacs amarok audacious
     vim-gvim vim sendmail-cf sendmail xpdf tetex-doc tetex kget"
+
+    # Remover kernel source
+    packagesList=$packagesList" kernel-source"
 
     filesDeleted="../0_filesDeleted.txt"
     filesNotFound="../0_filesNotFound.txt"
