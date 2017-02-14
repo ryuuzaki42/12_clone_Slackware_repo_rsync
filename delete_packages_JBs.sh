@@ -22,7 +22,7 @@
 #
 # Script: Delete package from a local directory that you don't want
 #
-# Last update: 13/02/2017
+# Last update: 14/02/2017
 #
 # Tip: Add the packages you want in the packagesList
 # Need one space before add more
@@ -95,8 +95,8 @@ else
     emacs amarok audacious
     vim-gvim vim sendmail-cf sendmail xpdf tetex-doc tetex kget"
 
-    # Remover kernel source
-    packagesList=$packagesList" kernel-source"
+    ## Virtualbox need # Remover kernel-source
+    #packagesList=$packagesList" kernel-source"
 
     filesDeleted="../0_filesDeleted.txt"
     filesNotFound="../0_filesNotFound.txt"
