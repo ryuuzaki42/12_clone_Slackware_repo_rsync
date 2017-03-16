@@ -22,7 +22,7 @@
 #
 # Script: Delete package from a local directory that you don't want
 #
-# Last update: 14/02/2017
+# Last update: 15/03/2017
 #
 # Tip: Add the packages you want in the packagesList
 # Need one space before add more
@@ -82,7 +82,7 @@ else
     echo -e "\n\nRemove \"gnome packages\"?\"gcr- polkit-gnome gnome-themes libgnome-keyring gnome-keyring\""
     echo -en "Recommended if you remove XFCE, but leave if you not remove XFCE\n(y)es remove - (n)ot remove: "
     read removeGnomePackages
-    if [ "$removeGnomePackages" == 'y']; then
+    if [ "$removeGnomePackages" == 'y' ]; then
         # Remove gnome "packages" # gcr- to not remove libgcrypt
         packagesList=$packagesList" gcr- polkit-gnome gnome-themes libgnome-keyring gnome-keyring"
     else
