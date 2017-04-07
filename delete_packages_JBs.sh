@@ -22,7 +22,7 @@
 #
 # Script: Delete package from a local directory that you don't want
 #
-# Last update: 28/03/2017
+# Last update: 07/04/2017
 #
 # Tip: Add the packages you want in the packagesList
 # Need one space before add more
@@ -35,11 +35,11 @@ if [ "$folderWork" == '' ]; then
 elif [ ! -d "$folderWork" ]; then
     echo -e "\nError: The dictory \"$folderWork\" not exist\n"
 else
-    folderWork=`echo $folderWork | sed "s/\///g"` # Remove the / in the end
-    cd $folderWork
+    folderWork=${folderWork//\//} # Remove the / in the end
+    cd "$folderWork" || exit
 
-    folderDeletedFiles="../toBeDeleted"`date +%s`
-    mkdir $folderDeletedFiles 2> /dev/null
+    folderDeletedFiles="../toBeDeleted"$(date +%s)
+    mkdir "$folderDeletedFiles" 2> /dev/null
 
     ## Add packages that you want in the packagesList
     ## Need one space before add more
@@ -58,7 +58,7 @@ else
 
     # Remove XFCE or/and KDE
 	echo -en "\nLeave XFCE or KDE?\n(1) Leave XFCE, (2) Leave KDE, (3) Remove XFCE and KDE (hit enter to remove KDE): "
-    read leaveXGUI
+    read -r leaveXGUI
     if [ "$leaveXGUI" == '1' ] || [ "$leaveXGUI" == '' ]; then
         packagesList=$packagesList" kde" # Also remove kdei
     elif [ "$leaveXGUI" == '2' ]; then
@@ -81,7 +81,7 @@ else
 
     echo -e "\n\nRemove \"gnome packages\"?\"gcr- polkit-gnome gnome-themes libgnome-keyring gnome-keyring\""
     echo -en "Recommended if you remove XFCE, but leave if you not remove XFCE\n(y)es remove - (n)ot remove: "
-    read removeGnomePackages
+    read -r removeGnomePackages
     if [ "$removeGnomePackages" == 'y' ]; then
         # Remove gnome "packages" # gcr- to not remove libgcrypt
         packagesList=$packagesList" gcr- polkit-gnome gnome-themes libgnome-keyring gnome-keyring"
@@ -103,25 +103,25 @@ else
 
     for packageName in $packagesList; do
         echo -e "\nLooking for \"$packageName\""
-        resultFind=`find . | grep $packageName`
+        resultFind=$(find . | grep "$packageName")
 
         if [ "$resultFind" == '' ]; then
-            echo "Not found: \"$packageName\"" | tee -a $filesNotFound
+            echo "Not found: \"$packageName\"" | tee -a "$filesNotFound"
         else
-            echo -e "Files removed: \"$packageName\"\n$resultFind\n" | tee -a $filesDeleted
-            mv $resultFind $folderDeletedFiles
+            echo -e "Files removed: \"$packageName\"\n$resultFind\n" | tee -a "$filesDeleted"
+            mv "$resultFind" "$folderDeletedFiles"
         fi
     done
 
     echo -e "\nFiles \"toBeDeleted\" are moved to \"$folderDeletedFiles\""
 
     echo -en "\nWant create a ISO file from work folder?\n(y)es - (n)o (press enter to no): "
-    read generateISO
+    read -r generateISO
 
-    isoFileName=$folderWork"_SelectedPkgss_date_"`date +%H_%M_%d_%m_%Y`
+    isoFileName=$folderWork"_SelectedPkgss_date_"$(date +%H_%M_%d_%m_%Y)
 
     if [ "$generateISO" == 'y' ]; then
-        cd ../
+        cd ../ || exit
 
         echo -en "\nCreating ISO file. Please wait..."
         mkisofs -pad -r -J -quiet -o "$isoFileName".iso "$folderWork"
