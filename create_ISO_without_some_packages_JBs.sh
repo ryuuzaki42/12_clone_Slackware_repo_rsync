@@ -131,7 +131,7 @@ else
 
     for packageName in $packagesList; do
         echo -e "\nLooking for \"$packageName\""
-        resultFind=$(find . | grep "$packageName")
+        resultFind=$(find . | grep "$packageName" | grep -E ".t.z$|.asc$|.txt$")
 
         if [ "$resultFind" == '' ]; then
             echo "Not found: \"$packageName\"" | tee -a "$filesNotFound"
