@@ -20,14 +20,14 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: Delete package from a local directory that you don't want
+# Script: Create a ISO without some package from a local directory that you don't want
 #
-# Last update: 07/04/2017
+# Last update: 16/04/2017
 #
 # Tip: Add the packages you want in the packagesList
 # Need one space before add more
 #
-echo -e "\nThis script \"delete\"/\"move\" packages from a Clone folder\n"
+echo -e "\nThis script create a ISO file from a clone folder of Slackware"
 
 folderWork=$1
 if [ "$folderWork" == '' ]; then
@@ -35,18 +35,12 @@ if [ "$folderWork" == '' ]; then
 elif [ ! -d "$folderWork" ]; then
     echo -e "\nError: The dictory \"$folderWork\" not exist\n"
 else
-    folderWork=${folderWork//\//} # Remove the / in the end
-    cd "$folderWork" || exit
-
-    folderDeletedFiles="../toBeDeleted"$(date +%s)
-    mkdir "$folderDeletedFiles" 2> /dev/null
-
     ## Add packages that you want in the packagesList
     ## Need one space before add more
     ## For example: Remove ktorrent
-    # packagesList=$packagesList" ktorrent libktorrent"
+    # packagesList="$packagesList ktorrent libktorrent"
 
-    # Remover games
+    # Remove games
     packagesList="palapeli bomber granatier
     kblocks ksnakeduel kbounce kbreakout kgoldrunner
     kspaceduel kapman kolf kollision kpat lskat blinken
@@ -57,49 +51,83 @@ else
     klines konquest ksirk knavalbattle kanagram amor kajongg"
 
     # Remove XFCE or/and KDE
-	echo -en "\nLeave XFCE or KDE?\n(1) Leave XFCE, (2) Leave KDE, (3) Remove XFCE and KDE (hit enter to remove KDE): "
+	echo -en "\nLeave XFCE or KDE?\n(1) Leave KDE, (2) Leave XFCE, (3) Remove XFCE and KDE (hit enter to Leave KDE): "
     read -r leaveXGUI
     if [ "$leaveXGUI" == '1' ] || [ "$leaveXGUI" == '' ]; then
-        packagesList=$packagesList" kde" # Also remove kdei
+        packagesListTmp=" xfce"
     elif [ "$leaveXGUI" == '2' ]; then
-        packagesList=$packagesList" xfce"
-    else
-        packagesList=$packagesList" kde xfce" # Also remove kdei
+        packagesListTmp=" kde" # Also remove kdei
+    elif [ "$leaveXGUI" == '3' ]; then
+        packagesListTmp=" kde xfce" # Also remove kdei
     fi
 
-    # Remover servidor X - Leave fluxbox # Safe propose
-    packagesList=$packagesList" twm blackbox windowmaker fvwm"
+    echo -e "\nWill remove \"$packagesListTmp\""
+    packagesList="$packagesList $packagesListTmp"
 
-    # Remover kopote
-    packagesList=$packagesList" kdenetwork-filesharing kdenetwork-strigi-analyzers kopete"
+    # Remove servidor X - Leave fluxbox # Safe propose
+    packagesList="$packagesList twm blackbox windowmaker fvwm"
+
+    # Remove kopote
+    packagesList="$packagesList kdenetwork-filesharing kdenetwork-strigi-analyzers kopete"
 
     # Remove nepomuk
-    packagesList=$packagesList" nepomuk-core nepomuk-widgets"
+    packagesList="$packagesList nepomuk-core nepomuk-widgets"
 
     # Remove akonadi
-    packagesList=$packagesList" akonadi"
+    packagesList="$packagesList akonadi"
 
-    echo -e "\n\nRemove \"gnome packages\"?\"gcr- polkit-gnome gnome-themes libgnome-keyring gnome-keyring\""
-    echo -en "Recommended if you remove XFCE, but leave if you not remove XFCE\n(y)es remove - (n)ot remove: "
+    # Remove kdei - others languages for the KDE
+    packagesList="$packagesList kdei"
+
+    echo -e "\nRemove \"gnome packages\"? \"gcr- polkit-gnome gnome-themes libgnome-keyring gnome-keyring\""
+    echo "Recommended if you remove XFCE, but leave if you not remove XFCE."
+    echo -n "(y)es to remove or (n)ot remove (hit enter to remove): "
     read -r removeGnomePackages
-    if [ "$removeGnomePackages" == 'y' ]; then
+    if [ "$removeGnomePackages" == 'y' ] || [ "$removeGnomePackages" == '' ]; then
         # Remove gnome "packages" # gcr- to not remove libgcrypt
-        packagesList=$packagesList" gcr- polkit-gnome gnome-themes libgnome-keyring gnome-keyring"
+        packagesList="$packagesList gcr- polkit-gnome gnome-themes libgnome-keyring gnome-keyring"
+        echo -en "\nR"
     else
-        echo -e "\nNot removing \"gnome packages\"\n"
+        echo -en "\nNot r"
     fi
+    echo -e "emoving \"gnome packages\"\n"
 
     # Remove other packages
-    packagesList=$packagesList" seamonkey pidgin xchat dragon thunderbird kplayer
+    packagesList="$packagesList seamonkey pidgin xchat dragon thunderbird kplayer
     calligra bluedevil blueman bluez-firmware bluez xine-lib xine-ui
     emacs amarok audacious
     vim-gvim vim sendmail-cf sendmail xpdf tetex-doc tetex kget"
 
-    ## Virtualbox need # Remover kernel-source
-    #packagesList=$packagesList" kernel-source"
+    ## Virtualbox need # Remove kernel-source
+    #packagesList="$packagesList kernel-source"
 
-    filesDeleted="../0_filesDeleted.txt"
-    filesNotFound="../0_filesNotFound.txt"
+    countI='0'
+    echo -e "\nPackages that will be removed:\n"
+    for packageName in $packagesList; do
+        echo -n "$packageName "
+        if [ "$countI" == "10" ]; then
+            echo
+            countI='0'
+        else
+            ((countI++))
+        fi
+    done
+
+    echo -en "\n\nWant continue? (y)es or (n)o: "
+    read -r continueOrNot
+    if [ "$continueOrNot" != 'y' ]; then
+        echo -e "\nJust exiting by local choice\n"
+        exit 0
+    fi
+
+    folderWork=${folderWork//\//} # Remove the / in the end
+    cd "$folderWork" || exit
+
+    filesIgnoredInTheISO="../0_filesIgnoredInTheISO.txt"
+    mkisofsExcludeList="../1_mkisofsExcludeList.txt"
+    filesNotFound="../2_filesNotFound.txt"
+
+    touch "$filesIgnoredInTheISO" "$mkisofsExcludeList"
 
     for packageName in $packagesList; do
         echo -e "\nLooking for \"$packageName\""
@@ -108,31 +136,40 @@ else
         if [ "$resultFind" == '' ]; then
             echo "Not found: \"$packageName\"" | tee -a "$filesNotFound"
         else
-            echo -e "Files removed: \"$packageName\"\n$resultFind\n" | tee -a "$filesDeleted"
-            mv "$resultFind" "$folderDeletedFiles"
+            echo -e "Files ignored with the pattern: \"$packageName\"\n$resultFind\n" | tee -a "$filesIgnoredInTheISO"
+            echo "$resultFind" | rev | cut -d '/' -f1 | rev | tee -a "$mkisofsExcludeList"
         fi
     done
-
-    echo -e "\nFiles \"toBeDeleted\" are moved to \"$folderDeletedFiles\""
 
     echo -en "\nWant create a ISO file from work folder?\n(y)es - (n)o (press enter to no): "
     read -r generateISO
 
-    isoFileName=$folderWork"_SelectedPkgss_date_"$(date +%H_%M_%d_%m_%Y)
+    isoFileName="${folderWork}_SelectedPkgs_date_$(date +%H_%M_%d_%m_%Y)"
 
     if [ "$generateISO" == 'y' ]; then
-        cd ../ || exit
+        cd .. || exit
 
-        echo -en "\nCreating ISO file. Please wait..."
-        mkisofs -pad -r -J -quiet -o "$isoFileName".iso "$folderWork"
-        # -pad   Pad output to a multiple of 32k (default)
-        # -r     Generate rationalized Rock Ridge directory information
-        # -J     Generate Joliet directory information
-        # -quiet Run quietly
-        # -o     Set output file name
+        mkisofsExcludeList=${mkisofsExcludeList:3} # Remove ../ from the path
+        filesNotFound=${filesNotFound:3}
+        filesIgnoredInTheISO=${filesIgnoredInTheISO:3}
 
-        echo -e "\n\nThe ISO file \"$isoFileName.iso\" was generated by the folder \"$folderWork\"/\n"
+        echo -e "\nCreating ISO file. Please wait...\n"
+        mkisofs -exclude-list "$mkisofsExcludeList" -pad -r -J -o "${isoFileName}.iso" "$folderWork/"
+
+        # -exclude-list FILE - File with list of file names to exclude
+        # -pad                 Pad output to a multiple of 32k (default)
+        # -r                   Generate rationalized Rock Ridge directory information
+        # -J                   Generate Joliet directory information
+        # -o                   Set output file name
+
+        echo -e "\n\nThe ISO file \"$isoFileName.iso\" was generated by the folder \"$folderWork/\"\n"
     else
-        echo -e "\n\nExiting...\n\nIf you want create a ISO file, use:\nmkisofs -pad -r -J -o \"$isoFileName\".iso \"$folderWork\"/\n"
+        echo -e "\n\nExiting...\n\nIf you want create a ISO file, use:\nmkisofs -exclude-list \"$mkisofsExcludeList\" -pad -r -J -o \"${isoFileName}.iso\" \"$folderWork/\"\n"
     fi
+
+    echo -e "\nTake a look in the files:\n"
+    echo "$(pwd)/"
+    echo -e "\t\t $(find $mkisofsExcludeList | rev | cut -d '/' -f1 | rev)"
+    echo -e "\t\t $(find $filesIgnoredInTheISO | rev | cut -d '/' -f1 | rev)"
+    echo -e "\t\t $(find $filesNotFound 2> /dev/null | rev | cut -d '/' -f1 | rev)"
 fi
