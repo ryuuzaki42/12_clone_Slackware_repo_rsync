@@ -160,7 +160,7 @@ else
             # -c continue a mirror job if possible
             # -e delete files not present at remote site
         else
-            lftp -c 'open '"$mirrorSource"'; mirror -c -e --exclude source/ --exclude patches/source/ '"$versionDownload"'/'
+            lftp -c 'open '"$mirrorSource"'; mirror -c -e --exclude source/ --exclude patches/source/ --exclude /pasture/source/ '"$versionDownload"'/'
         fi
     fi
 
