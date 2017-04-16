@@ -127,7 +127,7 @@ else
     mkisofsExcludeList="../1_mkisofsExcludeList.txt"
     filesNotFound="../2_filesNotFound.txt"
 
-    touch "$filesIgnoredInTheISO" "$mkisofsExcludeList"
+    rm "$filesIgnoredInTheISO" "$mkisofsExcludeList" "$filesNotFound" 2> /dev/null
 
     for packageName in $packagesList; do
         echo -e "\nLooking for \"$packageName\""
@@ -137,7 +137,7 @@ else
             echo "Not found: \"$packageName\"" | tee -a "$filesNotFound"
         else
             echo -e "Files ignored with the pattern: \"$packageName\"\n$resultFind\n" | tee -a "$filesIgnoredInTheISO"
-            echo "$resultFind" | rev | cut -d '/' -f1 | rev > "$mkisofsExcludeList"
+            echo "$resultFind" | rev | cut -d '/' -f1 | rev >> "$mkisofsExcludeList"
         fi
     done
 
