@@ -56,9 +56,9 @@ else
     if [ "$leaveXGUI" == '1' ] || [ "$leaveXGUI" == '' ]; then
         packagesListTmp=" xfce"
     elif [ "$leaveXGUI" == '2' ]; then
-        packagesListTmp=" kde" # Also remove kdei
+        packagesListTmp=" kde" # Also remove kde-l10n-
     elif [ "$leaveXGUI" == '3' ]; then
-        packagesListTmp=" kde xfce" # Also remove kdei
+        packagesListTmp=" kde xfce" # Also remove kde-l10n-
     fi
 
     echo -e "\nWill remove \"$packagesListTmp\""
@@ -76,8 +76,8 @@ else
     # Remove akonadi
     packagesList="$packagesList akonadi"
 
-    # Remove kdei - others languages for the KDE
-    packagesList="$packagesList kdei"
+    # Remove kde-l10n- - others languages for the KDE
+    packagesList="$packagesList kde-l10n-"
 
     echo -e "\nRemove \"gnome packages\"? \"gcr- polkit-gnome gnome-themes libgnome-keyring gnome-keyring\""
     echo "Recommended if you remove XFCE, but leave if you not remove XFCE."
