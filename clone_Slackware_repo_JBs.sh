@@ -22,7 +22,7 @@
 #
 # Script: Clone some Slackware repository to a local source
 #
-# Last update: 16/04/2017
+# Last update: 07/05/2017
 #
 # Tip: Use the file inside one "old" ISO to make less things to download
 
@@ -257,7 +257,7 @@ else
     isoFileName=$versionDownload"_AllPkgs_date_"$(date +%H_%M_%d_%m_%Y)
 
     if [ "$generateISO" == 'y' ]; then
-        olderIsoSlackware=$(ls "slackware.*iso")
+        olderIsoSlackware=$(ls "slackware*iso")
 
         if [ "$olderIsoSlackware" != '' ]; then
             echo -e "$CYAN\nOlder ISO file Slackware found:$GREEN $olderIsoSlackware$NC"
