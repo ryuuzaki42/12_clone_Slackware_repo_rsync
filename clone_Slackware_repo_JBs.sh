@@ -22,7 +22,7 @@
 #
 # Script: Clone some Slackware repository to a local source
 #
-# Last update: 07/05/2017
+# Last update: 23/05/2017
 #
 # Tip: Use the file inside one "old" ISO to make less things to download
 
@@ -254,7 +254,7 @@ else
     echo -en "$CYAN\nWant create a ISO file from downloaded folder?$NC\n(y)es - (n)o $GREEN(press enter to no):$NC "
     read -r generateISO
 
-    isoFileName=$versionDownload"_AllPkgs_date_"$(date +%H_%M_%d_%m_%Y)
+    isoFileName=$versionDownload"_AllPkgs_date_"$(date +%d_%m_%Y)
 
     if [ "$generateISO" == 'y' ]; then
         olderIsoSlackware=$(ls "slackware*iso")

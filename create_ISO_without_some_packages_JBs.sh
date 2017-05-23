@@ -22,7 +22,7 @@
 #
 # Script: Create a ISO without some package from a local directory that you don't want
 #
-# Last update: 16/04/2017
+# Last update: 23/05/2017
 #
 # Tip: Add the packages you want in the packagesList
 # Need one space before add more
@@ -144,7 +144,7 @@ else
     echo -en "\nWant create a ISO file from work folder?\n(y)es - (n)o (press enter to no): "
     read -r generateISO
 
-    isoFileName="${folderWork}_SelectedPkgs_date_$(date +%H_%M_%d_%m_%Y)"
+    isoFileName="${folderWork}_SelectedPkgs_date_$(date +%d_%m_%Y)"
 
     if [ "$generateISO" == 'y' ]; then
         cd .. || exit
