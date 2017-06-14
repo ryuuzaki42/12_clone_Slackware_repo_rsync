@@ -35,7 +35,7 @@ elif [ ! -d "$folderWork" ]; then
 else
     enterContinue () {
         echo -n "Press enter to continue..."
-        read
+        read -r
         echo
     }
 
@@ -43,15 +43,17 @@ else
     echo "Folder work: $workFolder"
     enterContinue
 
-    cd $workFolder || exit
+    cd "$workFolder" || exit
 
     echo -n "Slackware - "
-    if  echo $workFolder | grep -q "current"; then
+    if echo "$workFolder" | grep -q "current"; then
         echo "current:"
-        slackwarePackageFolder=$(ls | grep "slackware")
+        slackwarePackageFolder=$(find . -maxdepth 1 | grep "slackware" | cut -d '/' -f2)
     else
         echo "stable:"
         slackwarePackageFolder="patches/packages/"
+
+        logFile="../" # Slackware stable folder update is 3 levels and current 2
     fi
 
     echo -e  "Update folder: $workFolder/$slackwarePackageFolder"
@@ -65,14 +67,14 @@ else
         pkgToUpgrade=$1
 
         echo "$pkgToUpgrade"
-        read
-        logFile="../../upgradePKGLog.r"
+        read -r
+
+        logFile="${logFile}../../upgradePKGLog.r"
 
         for pkg in $pkgToUpgrade; do
             echo -e "Upgrade: $pkg"
-            upgradepkg $pkg
 
-            if [ "$?" == '0' ]; then
+            if upgradepkg "$pkg"; then
                 echo -e "Upgrade: $pkg" >> $logFile
             fi
         done
