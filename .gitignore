@@ -1,2 +1,9 @@
+# Clone folder(s)
 slackware*/
+
+# ISO file(s) from a cloned folder
 slackware*.iso
+
+# Log files from mkisofs
+0_filesIgnoredInTheISO.txt
+1_mkisofsExcludeList.txt
