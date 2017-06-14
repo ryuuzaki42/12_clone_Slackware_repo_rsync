@@ -22,7 +22,7 @@
 #
 # Script: Create a ISO without some package from a local directory that you don't want
 #
-# Last update: 23/05/2017
+# Last update: 13/06/2017
 #
 # Tip: Add the packages you want in the packagesList
 # Need one space before add more
@@ -51,7 +51,7 @@ else
     klines konquest ksirk knavalbattle kanagram amor kajongg"
 
     # Remove XFCE or/and KDE
-	echo -en "\nLeave XFCE or KDE?\n(1) Leave KDE, (2) Leave XFCE, (3) Remove XFCE and KDE (hit enter to Leave KDE): "
+    echo -en "\nLeave XFCE or KDE?\n(1) Leave KDE, (2) Leave XFCE, (3) Remove XFCE and KDE (hit enter to Leave KDE): "
     read -r leaveXGUI
     if [ "$leaveXGUI" == '1' ] || [ "$leaveXGUI" == '' ]; then
         packagesListTmp=" xfce"
