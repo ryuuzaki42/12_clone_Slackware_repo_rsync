@@ -22,7 +22,7 @@
 #
 # Script: Create a ISO without some package from a local directory that you don't want
 #
-# Last update: 13/06/2017
+# Last update: 14/06/2017
 #
 # Tip: Add the packages you want in the packagesList
 # Need one space before add more
@@ -33,7 +33,7 @@ folderWork=$1
 if [ "$folderWork" == '' ]; then
     echo -e "\nError: You need pass the folder to work\n"
 elif [ ! -d "$folderWork" ]; then
-    echo -e "\nError: The dictory \"$folderWork\" not exist\n"
+    echo -e "\nError: The directory \"$folderWork\" not exist\n"
 else
     ## Add packages that you want in the packagesList
     ## Need one space before add more
