@@ -56,26 +56,33 @@ else
         logFile="../" # Slackware stable folder update is 3 levels and current 2
     fi
 
-    echo -e  "Update folder: $workFolder/$slackwarePackageFolder"
+    echo -e "Update folder: $workFolder/$slackwarePackageFolder"
     enterContinue
 
     cd $slackwarePackageFolder || exit
     echo "Change directory: cd $(pwd)"
     enterContinue
 
+    logFile="${logFile}../../upgradePkgLog.r"
+    echo "Packages upgrade:" > "$logFile"
+
+    logFileTmp="upgradePkgLogTmp.r"
+    logFileTmp2="upgradePkgLogTmp2.r"
+
     upgradePKG () {
         pkgToUpgrade=$1
 
         echo "$pkgToUpgrade"
-        read -r
-
-        logFile="${logFile}../../upgradePKGLog.r"
+        enterContinue
 
         for pkg in $pkgToUpgrade; do
-            echo -e "Upgrade: $pkg"
+            upgradepkg "$pkg" > "$logFileTmp"
 
-            if upgradepkg "$pkg"; then
-                echo -e "Upgrade: $pkg" >> $logFile
+            cat "$logFileTmp" | grep -E "Error|Skipping|Upgrading" > "$logFileTmp2"
+            cat "$logFileTmp2"
+
+           if cat "$logFileTmp2" | grep -q "Upgrading"; then
+                echo "$pkg" >> "$logFile"
             fi
         done
 
@@ -91,9 +98,11 @@ else
 
     upgradePKG "$kernelToUpgrade"
 
-    echo "IMPORTANT!  *Before* attempting to reboot your system, you will need
+    rm "$logFileTmp" "$logFileTmp2"
+
+    echo "IMPORTANT! *Before* attempting to reboot your system, you will need
     to make sure that the bootloader has been updated for the new kernel!
-    First, be sure your initrd is up to date (if you use one).  You can
+    First, be sure your initrd is up to date (if you use one). You can
     build a new initrd automatically by running the
     mkinitrd_command_generator.sh script.
 
@@ -107,7 +116,7 @@ else
     /usr/share/mkinitrd/mkinitrd_command_generator.sh -k 4.4.14-smp | bash
 
     If you use LILO, make sure the paths in /etc/lilo.conf point to a valid
-    kernel and then type 'lilo' to reinstall LILO.  If you use a USB memory
+    kernel and then type 'lilo' to reinstall LILO. If you use a USB memory
     stick to boot, copy the new kernel to it in place of the old one."
     enterContinue
 
