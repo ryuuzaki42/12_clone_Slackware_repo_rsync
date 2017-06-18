@@ -22,7 +22,7 @@
 #
 # Script: Clone some Slackware repository to a local source
 #
-# Last update: 14/06/2017
+# Last update: 18/06/2017
 #
 # Tip: Use the file inside one "old" ISO to make less things to download
 
@@ -71,6 +71,12 @@ read -r versionSlackware
 
 if [ "$versionSlackware" == '' ]; then
     versionSlackware="14.2"
+fi
+
+if echo "$versionSlackware" | grep -qv "current"; then
+    echo -e "\n\t$RED#--------------------------------------------------------------------------#"
+    echo -en "$CYAN\t# Downlad only the patches (patches/)? (y)es - (n)o $GREEN(press enter to no):$NC "
+    read onlyPatches
 fi
 
 echo -en "$CYAN\nWith arch you want?$NC\n(1) - 32 bits or (2) - 64 bits $GREEN(press enter to 64 bits):$NC "
@@ -122,8 +128,9 @@ else
             rm ChangeLog.txt
 
             echo -e "$GREEN equal$CYAN with the$BLUE ChangeLog.txt$CYAN in local folder"
-            echo -e "$CYAN\nWant continue/force the download or jump the download step?"
-            echo -en "$NC\n(y)es to continue - (n)o to jump $GREEN(press enter to no):$NC "
+            echo -e "\n\t$RED#-----------------------------------------------------------#"
+            echo -e "$CYAN\t# Want continue/force the download or jump the download step?"
+            echo -en "$NC\t# (y)es to continue - (n)o to jump $GREEN(press enter to no):$NC "
             read -r contineOrJump
 
         else # $changeLogMd5sumResult == FAILED
@@ -153,17 +160,21 @@ else
         contineOrJump='y'
     fi
 
+    if [ "$onlyPatches" == 'y' ]; then
+        onlyPatchesDl="-x EFI/ -x extra/ -x isolinux/ -x kernels/ -x pasture/ -x slackware64/ -x testing/ -x usb-and-pxe-installers/"
+    fi
+
+    if [ "$downloadSource" != 'y' ]; then
+        removeSoure="-x source/ -x patches/source/ -x /pasture/source/"
+    fi
+
     if [ "$contineOrJump" == 'y' ]; then
         echo -en "$CYAN\nDownloading files$NC. Please wait...\n\n"
 
-        if [ "$downloadSource" == 'y' ]; then
-            lftp -c 'open '"$mirrorSource"'; mirror -c -e '"$versionDownload"'/'
-            # -c continue a mirror job if possible
-            # -e delete files not present at remote site
-        else
-            lftp -c 'open '"$mirrorSource"'; mirror -c -e -x source/ -x patches/source/ -x /pasture/source/ '"$versionDownload"'/'
-            # -x RX exclude matching files
-        fi
+        lftp -c 'open '"$mirrorSource"'; mirror -c -e '"$removeSoure"' '"$onlyPatchesDl"' '"$versionDownload"'/'
+        # -c continue a mirror job if possible
+        # -e delete files not present at remote site
+        # -x RX exclude matching files
     fi
 
     if [ "$tmpMd5sumBeforeDownload" != '' ]; then
@@ -239,7 +250,13 @@ else
         if [ "$downloadSource" == 'y' ]; then
             checkFilesResult=$(tail +13 CHECKSUMS.md5 | md5sum -c --quiet)
         else
-            checkFilesResult=$(tail +13 CHECKSUMS.md5 | grep -v "source/" | grep -v "patches/source/" | md5sum -c --quiet)
+            grepRemove=$(echo "$removeSoure" | sed 's/-x //g' | sed 's/ /|/g')
+
+            if [ "$onlyPatches" == 'y' ]; then
+                grepRemove="$grepRemove|"$(echo "$onlyPatchesDl" | sed 's/-x //g' | sed 's/ /|/g')
+            fi
+
+            checkFilesResult=$(tail +13 CHECKSUMS.md5 | grep -vE "$grepRemove" | md5sum -c --quiet)
         fi
 
         echo -en "$CYAN\n\nFiles integrity:"
