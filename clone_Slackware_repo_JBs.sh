@@ -22,7 +22,7 @@
 #
 # Script: Clone some Slackware repository to a local source
 #
-# Last update: 24/06/2017
+# Last update: 06/07/2017
 #
 # Tip: Use the file inside one "old" ISO to make less things to download
 
@@ -75,10 +75,11 @@ fi
 
 if echo "$versionSlackware" | grep -qv "current"; then
     echo -e "\n\t$RED#--------------------------------------------------------------------------#"
-    echo -en "$CYAN\t# Downlad only the patches (patches/)? (y)es - (n)o $GREEN(press enter to no):$NC "
+    echo -en "$CYAN\t# Downlad only the patches (patches/)? (y)es - (n)o $GREEN(press enter to yes):$NC "
     read onlyPatches
 
-    if [ "$onlyPatches" == 'y' ];then
+    if [ "$onlyPatches" == '' ];then
+        onlyPatches='y'
         echo -en "\n\t$CYAN# Downloading only the patches\n$NC"
     fi
 fi
@@ -111,6 +112,16 @@ read -r contineLftp
 if [ "$contineLftp" == 'n' ]; then
     echo -e "$CYAN\nJust exiting by user choice$NC\n"
 else
+    if [ "$downloadSource" != 'y' ]; then
+        removeSoure="-x source/ -x patches/source/ -x /pasture/source/"
+        grepRemove=$(echo "$removeSoure" | sed 's/-x //g' | sed 's/ /|/g')
+    fi
+
+    if [ "$onlyPatches" == 'y' ]; then
+        onlyPatchesDl="-x EFI/ -x extra/ -x isolinux/ -x kernels/ -x pasture/ -x slackware64/ -x testing/ -x usb-and-pxe-installers/"
+        grepRemove="$grepRemove|"$(echo "$onlyPatchesDl" | sed 's/-x //g' | sed 's/ /|/g')
+    fi
+
     if [ -e $versionDownload/ ]; then
         echo -e "$CYAN\nOlder folder download found ($GREEN$versionDownload/$CYAN)$NC"
 
@@ -162,14 +173,6 @@ else
         fi
     else
         contineOrJump='y'
-    fi
-
-    if [ "$onlyPatches" == 'y' ]; then
-        onlyPatchesDl="-x EFI/ -x extra/ -x isolinux/ -x kernels/ -x pasture/ -x slackware64/ -x testing/ -x usb-and-pxe-installers/"
-    fi
-
-    if [ "$downloadSource" != 'y' ]; then
-        removeSoure="-x source/ -x patches/source/ -x /pasture/source/"
     fi
 
     if [ "$contineOrJump" == 'y' ]; then
@@ -251,17 +254,7 @@ else
 
     if [ "$checkFiles" == 'y' ] || [ "$checkFiles" == '' ]; then
         echo -en "$CYAN\nChecking the integrity of the files$NC. Please wait..."
-        if [ "$downloadSource" == 'y' ]; then
-            checkFilesResult=$(tail +13 CHECKSUMS.md5 | md5sum -c --quiet)
-        else
-            grepRemove=$(echo "$removeSoure" | sed 's/-x //g' | sed 's/ /|/g')
-
-            if [ "$onlyPatches" == 'y' ]; then
-                grepRemove="$grepRemove|"$(echo "$onlyPatchesDl" | sed 's/-x //g' | sed 's/ /|/g')
-            fi
-
-            checkFilesResult=$(tail +13 CHECKSUMS.md5 | grep -vE "$grepRemove" | md5sum -c --quiet)
-        fi
+        checkFilesResult=$(tail +13 CHECKSUMS.md5 | grep -vE "$grepRemove" | md5sum -c --quiet)
 
         echo -en "$CYAN\n\nFiles integrity:"
         if [ "$checkFilesResult" == '' ]; then
