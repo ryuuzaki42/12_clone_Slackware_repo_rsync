@@ -22,12 +22,11 @@
 #
 # Script: Clone some Slackware repository to a local source
 #
-# Last update: 06/07/2017
+# Last update: 18/07/2017
 #
 # Tip: Use the file inside one "old" ISO to make less things to download
-
+#
 input1=$1
-
 if [ "$input1" == "noColor" ]; then
     echo -e "\nColors disabled"
 else
@@ -76,7 +75,7 @@ fi
 if echo "$versionSlackware" | grep -qv "current"; then
     echo -e "\n\t$RED#--------------------------------------------------------------------------#"
     echo -en "$CYAN\t# Downlad only the patches (patches/)? (y)es - (n)o $GREEN(press enter to yes):$NC "
-    read onlyPatches
+    read -r onlyPatches
 
     if [ "$onlyPatches" == '' ];then
         onlyPatches='y'
