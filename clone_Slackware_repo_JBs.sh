@@ -22,7 +22,7 @@
 #
 # Script: Clone some Slackware repository to a local source
 #
-# Last update: 18/07/2017
+# Last update: 12/08/2017
 #
 # Tip: Use the file inside one "old" ISO to make less things to download
 #
@@ -77,9 +77,11 @@ if echo "$versionSlackware" | grep -qv "current"; then
     echo -en "$CYAN\t# Downlad only the patches (patches/)? (y)es - (n)o $GREEN(press enter to yes):$NC "
     read -r onlyPatches
 
-    if [ "$onlyPatches" == '' ];then
+    if [ "$onlyPatches" == '' ] || [ "$onlyPatches" == 'y' ]; then
         onlyPatches='y'
-        echo -en "\n\t$CYAN# Downloading only the patches\n$NC"
+        echo -en "\n$BLUE# Downloading only the patches #\n$NC"
+    else
+        echo -en "\n$BLUE# Downloading all the files #\n$NC"
     fi
 fi
 
