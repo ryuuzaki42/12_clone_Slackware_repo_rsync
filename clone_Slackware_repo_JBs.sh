@@ -55,7 +55,7 @@ if [ "$changeMirror" == 'y' ]; then
     mirrorSource=''
 
     while echo "$mirrorSource" | grep -v -q -E "ftp|http"; do
-        echo -en "$CYAN \\nType the new mirror:$NC "
+        echo -en "$CYAN\\nType the new mirror:$NC "
         read -r mirrorSource
 
         if echo "$mirrorSource" | grep -v -q -E "ftp|http"; then
@@ -94,7 +94,7 @@ else
     choosedArch="64"
 fi
 
-versionDownload=slackware$choosedArch-$versionSlackware
+versionDownload="slackware$choosedArch-$versionSlackware"
 
 echo -en "$CYAN\\nWant download the source code?$NC\\n(y)es - (n)o $GREEN(press enter to no):$NC "
 read -r downloadSource
@@ -132,7 +132,7 @@ else
 
         cd "$versionDownload" || exit
         changeLogLocalMd5sum=$(md5sum ChangeLog.txt)
-        cd .. || exit
+        cd ../ || exit
 
         checkChangeLogMd5sum=$(echo -e "$changeLogLocalMd5sum" | md5sum -c 2> /dev/null)
 
@@ -273,7 +273,7 @@ else
         fi
     fi
 
-    cd .. || exit
+    cd ../ || exit
 
     echo -en "$CYAN\\nWant create a ISO file from downloaded folder?$NC\\n(y)es - (n)o $GREEN(press enter to no):$NC "
     read -r generateISO

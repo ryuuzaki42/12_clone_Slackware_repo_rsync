@@ -22,18 +22,18 @@
 #
 # Script: Create a ISO without some package from a local directory that you don't want
 #
-# Last update: 14/06/2017
+# Last update: 12/01/2018
 #
 # Tip: Add the packages you want in the packagesList
 # Need one space before add more
 #
-echo -e "\nThis script create a ISO file from a clone folder of Slackware"
+echo -e "\\nThis script create a ISO file from a clone folder of Slackware"
 
 folderWork=$1
 if [ "$folderWork" == '' ]; then
-    echo -e "\nError: You need pass the folder to work\n"
+    echo -e "\\nError: You need pass the folder to work\\n"
 elif [ ! -d "$folderWork" ]; then
-    echo -e "\nError: The directory \"$folderWork\" not exist\n"
+    echo -e "\\nError: The directory \"$folderWork\" not exist\\n"
 else
     ## Add packages that you want in the packagesList
     ## Need one space before add more
@@ -51,7 +51,7 @@ else
     klines konquest ksirk knavalbattle kanagram amor kajongg"
 
     # Remove XFCE or/and KDE
-    echo -en "\nLeave XFCE or KDE?\n(1) Leave KDE, (2) Leave XFCE, (3) Remove XFCE and KDE (hit enter to Leave KDE): "
+    echo -en "\\nLeave XFCE or KDE?\\n(1) Leave KDE, (2) Leave XFCE, (3) Remove XFCE and KDE (hit enter to Leave KDE): "
     read -r leaveXGUI
     if [ "$leaveXGUI" == '1' ] || [ "$leaveXGUI" == '' ]; then
         packagesListTmp=" xfce"
@@ -61,7 +61,7 @@ else
         packagesListTmp=" kde xfce" # Also remove kde-l10n-
     fi
 
-    echo -e "\nWill remove \"$packagesListTmp\""
+    echo -e "\\nWill remove \"$packagesListTmp\""
     packagesList="$packagesList $packagesListTmp"
 
     # Remove servidor X - Leave fluxbox # Safe propose
@@ -79,18 +79,18 @@ else
     # Remove kde-l10n- - others languages for the KDE
     packagesList="$packagesList kde-l10n-"
 
-    echo -e "\nRemove \"gnome packages\"? \"gcr- polkit-gnome gnome-themes libgnome-keyring gnome-keyring\""
+    echo -e "\\nRemove \"gnome packages\"? \"gcr- polkit-gnome gnome-themes libgnome-keyring gnome-keyring\""
     echo "Recommended if you remove XFCE, but leave if you not remove XFCE."
     echo -n "(y)es to remove or (n)ot remove (hit enter to remove): "
     read -r removeGnomePackages
     if [ "$removeGnomePackages" == 'y' ] || [ "$removeGnomePackages" == '' ]; then
         # Remove gnome "packages" # gcr- to not remove libgcrypt
         packagesList="$packagesList gcr- polkit-gnome gnome-themes libgnome-keyring gnome-keyring"
-        echo -en "\nR"
+        echo -en "\\nR"
     else
-        echo -en "\nNot r"
+        echo -en "\\nNot r"
     fi
-    echo -e "emoving \"gnome packages\"\n"
+    echo -e "emoving \"gnome packages\"\\n"
 
     # Remove other packages
     packagesList="$packagesList seamonkey pidgin xchat dragon thunderbird kplayer
@@ -102,7 +102,7 @@ else
     #packagesList="$packagesList kernel-source"
 
     countI='0'
-    echo -e "\nPackages that will be removed:\n"
+    echo -e "\\nPackages that will be removed:\\n"
     for packageName in $packagesList; do
         echo -n "$packageName "
         if [ "$countI" == "10" ]; then
@@ -113,10 +113,10 @@ else
         fi
     done
 
-    echo -en "\n\nWant continue? (y)es or (n)o: "
+    echo -en "\\n\\nWant continue? (y)es or (n)o: "
     read -r continueOrNot
     if [ "$continueOrNot" != 'y' ]; then
-        echo -e "\nJust exiting by local choice\n"
+        echo -e "\\nJust exiting by local choice\\n"
         exit 0
     fi
 
@@ -130,18 +130,18 @@ else
     rm "$filesIgnoredInTheISO" "$mkisofsExcludeList" "$filesNotFound" 2> /dev/null
 
     for packageName in $packagesList; do
-        echo -e "\nLooking for \"$packageName\""
+        echo -e "\\nLooking for \"$packageName\""
         resultFind=$(find . | grep "$packageName" | grep -E ".t.z$|.asc$|.txt$")
 
         if [ "$resultFind" == '' ]; then
             echo "Not found: \"$packageName\"" | tee -a "$filesNotFound"
         else
-            echo -e "Files ignored with the pattern: \"$packageName\"\n$resultFind\n" | tee -a "$filesIgnoredInTheISO"
+            echo -e "Files ignored with the pattern: \"$packageName\"\\n$resultFind\\n" | tee -a "$filesIgnoredInTheISO"
             echo "$resultFind" | rev | cut -d '/' -f1 | rev >> "$mkisofsExcludeList"
         fi
     done
 
-    echo -en "\nWant create a ISO file from work folder?\n(y)es - (n)o (press enter to no): "
+    echo -en "\\nWant create a ISO file from work folder?\\n(y)es - (n)o (press enter to no): "
     read -r generateISO
 
     isoFileName="${folderWork}_SelectedPkgs_date_$(date +%d_%m_%Y)"
@@ -153,7 +153,7 @@ else
         filesNotFound=${filesNotFound:3}
         filesIgnoredInTheISO=${filesIgnoredInTheISO:3}
 
-        echo -e "\nCreating ISO file. Please wait...\n"
+        echo -e "\\nCreating ISO file. Please wait...\\n"
         mkisofs -exclude-list "$mkisofsExcludeList" -pad -r -J -o "${isoFileName}.iso" "$folderWork/"
 
         # -exclude-list FILE - File with list of file names to exclude
@@ -162,14 +162,14 @@ else
         # -J                   Generate Joliet directory information
         # -o                   Set output file name
 
-        echo -e "\n\nThe ISO file \"$isoFileName.iso\" was generated by the folder \"$folderWork/\"\n"
+        echo -e "\\n\\nThe ISO file \"$isoFileName.iso\" was generated by the folder \"$folderWork/\"\\n"
     else
-        echo -e "\n\nExiting...\n\nIf you want create a ISO file, use:\nmkisofs -exclude-list \"$mkisofsExcludeList\" -pad -r -J -o \"${isoFileName}.iso\" \"$folderWork/\"\n"
+        echo -e "\\n\\nExiting...\\n\\nIf you want create a ISO file, use:\\nmkisofs -exclude-list \"$mkisofsExcludeList\" -pad -r -J -o \"${isoFileName}.iso\" \"$folderWork/\"\\n"
     fi
 
-    echo -e "\nTake a look in the files:\n"
+    echo -e "\\nTake a look in the files:\\n"
     echo "$(pwd)/"
-    echo -e "\t\t $(find $mkisofsExcludeList | rev | cut -d '/' -f1 | rev)"
-    echo -e "\t\t $(find $filesIgnoredInTheISO | rev | cut -d '/' -f1 | rev)"
-    echo -e "\t\t $(find $filesNotFound 2> /dev/null | rev | cut -d '/' -f1 | rev)"
+    echo -e "\\t\\t $(find $mkisofsExcludeList | rev | cut -d '/' -f1 | rev)"
+    echo -e "\\t\\t $(find $filesIgnoredInTheISO | rev | cut -d '/' -f1 | rev)"
+    echo -e "\\t\\t $(find $filesNotFound 2> /dev/null | rev | cut -d '/' -f1 | rev)"
 fi
