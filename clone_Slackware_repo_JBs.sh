@@ -22,7 +22,7 @@
 #
 # Script: Clone some Slackware repository to a local source
 #
-# Last update: 12/01/2018
+# Last update: 07/02/2018
 #
 # Tip: Use the file inside one "old" ISO to make less things to download
 #
@@ -224,7 +224,7 @@ else
 
             if [ "$filesUpdate" != '' ]; then
                 echo -e "$GREEN\\nFile(s) updated:$NC"
-                echo "$filesUpdate" | sed 's/|/\\n/g' | sort
+                echo "$filesUpdate" | sed 's/|/\n/g' | sort
             fi
 
             for lineA in $diffBeforeDownload; do
@@ -236,7 +236,7 @@ else
 
             if [ "$filesDeleted" != '' ]; then
                 echo -e "$RED\\nFile(s) deleted:$NC"
-                echo "$filesDeleted" | sed 's/|/\\n/g' | sort
+                echo "$filesDeleted" | sed 's/|/\n/g' | sort
             fi
 
             for lineB in $diffAfterDownload; do
@@ -248,7 +248,7 @@ else
 
             if [ "$filesNew" != '' ]; then
                 echo -e "$BLUE\\nNew file(s) downloaded:$NC"
-                echo "$filesNew" | sed 's/|/\\n/g' | sort
+                echo "$filesNew" | sed 's/|/\n/g' | sort
             fi
         fi
 
