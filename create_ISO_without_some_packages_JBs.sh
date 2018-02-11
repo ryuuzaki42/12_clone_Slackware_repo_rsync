@@ -22,7 +22,7 @@
 #
 # Script: Create a ISO without some package from a local directory that you don't want
 #
-# Last update: 12/01/2018
+# Last update: 11/02/2018
 #
 # Tip: Add the packages you want in the packagesList
 # Need one space before add more
@@ -94,11 +94,12 @@ else
 
     # Remove other packages
     packagesList="$packagesList seamonkey pidgin xchat dragon thunderbird kplayer
-    calligra bluedevil blueman bluez-firmware bluez xine-lib xine-ui
-    emacs amarok audacious
-    vim-gvim vim sendmail-cf sendmail xpdf tetex-doc tetex kget"
+    calligra  xine-lib xine-ui emacs amarok audacious vim-gvim vim sendmail-cf sendmail xpdf tetex-doc tetex kget"
 
-    ## Virtualbox need # Remove kernel-source
+    # Remove Bluetooth
+    #packagesList="$packagesList bluedevil blueman bluez-firmware bluez"
+
+    # Virtualbox need # Remove kernel-source
     #packagesList="$packagesList kernel-source"
 
     countI='0'
