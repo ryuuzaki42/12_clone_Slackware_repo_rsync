@@ -98,9 +98,9 @@ echo -en "$CYAN\\nWith arch you want?$NC\\n(1) - 32 bits or (2) - 64 bits $GREEN
 read -r choosedArch
 
 if [ "$choosedArch" == '1' ]; then
-    choosedArch=''
+    choosedArch='' # Slackware 32 bits has folder name slackware-Version
 else
-    choosedArch="64"
+    choosedArch="64" # Slackware 64 bits has folder slackware64-Version
 fi
 
 versionDownload="slackware$choosedArch-$versionSlackware"
@@ -171,7 +171,7 @@ else
         fi
 
         if [ "$contineOrJump" == 'y' ]; then
-            echo -en "$CYAN\\nCreate a md5sum for all local files (can take a while)? $NC\\n(y)es or (n)o $GREEN(press enter no):$NC "
+            echo -en "$CYAN\\nCreate a md5sum for all local files (${RED}can take a while$CYAN)? $NC\\n(y)es or (n)o $GREEN(press enter no):$NC "
             read -r useMd5sumCheckBeforeDownload
 
             if [ "$useMd5sumCheckBeforeDownload" == 'y' ]; then
