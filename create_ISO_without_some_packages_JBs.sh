@@ -22,140 +22,157 @@
 #
 # Script: Create a ISO without some package from a local directory that you don't want
 #
-# Last update: 11/02/2018
+# Last update: 14/09/2020
 #
 # Tip: Add the packages you want in the packagesList
 # Need one space before add more
 #
-echo -e "\\nThis script create a ISO file from a clone folder of Slackware"
+echo -e "\\nThis script create a ISO file from a clone folder of Slackware\\n"
 
 folderWork=$1
 if [ "$folderWork" == '' ]; then
-    echo -e "\\nError: You need pass the folder to work\\n"
+    echo -e "Error: You need pass the folder to work\\n"
 elif [ ! -d "$folderWork" ]; then
-    echo -e "\\nError: The directory \"$folderWork\" not exist\\n"
+    echo -e "Error: The directory \"$folderWork\" not exist\\n"
 else
-    ## Add packages that you want in the packagesList
-    ## Need one space before add more
-    ## For example: Remove ktorrent
-    # packagesList="$packagesList ktorrent libktorrent"
+    echo -en "ISO with all packages or remove the packages in packagesList?\\n1 to all package - 2 to use packagesList (hit enter to use packagesList): "
+    read -r usePackagesList
 
-    # Remove games
-    packagesList="palapeli bomber granatier
-    kblocks ksnakeduel kbounce kbreakout kgoldrunner
-    kspaceduel kapman kolf kollision kpat lskat blinken
-    khangman pairs ktuberling kdiamond ksudoku kubrick
-    picmi bovo kblackbox kfourinline kmahjongg kreversi
-    ksquares kigo kiriki kshisen gnuchess katomic
-    kjumpingcube kmines knetwalk killbots klickety
-    klines konquest ksirk knavalbattle kanagram amor kajongg"
+    if [ "$usePackagesList" == '' ] || [ "$usePackagesList" == '2' ]; then
+        echo -e "\\nUsing packagesList"
 
-    # Remove XFCE or/and KDE
-    echo -en "\\nLeave XFCE or KDE?\\n(1) Leave KDE, (2) Leave XFCE, (3) Remove XFCE and KDE (hit enter to Leave KDE): "
-    read -r leaveXGUI
-    if [ "$leaveXGUI" == '1' ] || [ "$leaveXGUI" == '' ]; then
-        packagesListTmp=" xfce"
-    elif [ "$leaveXGUI" == '2' ]; then
-        packagesListTmp=" kde" # Also remove kde-l10n-
-    elif [ "$leaveXGUI" == '3' ]; then
-        packagesListTmp=" kde xfce" # Also remove kde-l10n-
-    fi
+        ## Add packages that you want in the packagesList
+        ## Need one space before add more
+        ## For example: Remove ktorrent
+        # packagesList="$packagesList ktorrent libktorrent"
 
-    echo -e "\\nWill remove \"$packagesListTmp\""
-    packagesList="$packagesList $packagesListTmp"
+        # Remove games
+        packagesList="palapeli bomber granatier
+        kblocks ksnakeduel kbounce kbreakout kgoldrunner
+        kspaceduel kapman kolf kollision kpat lskat blinken
+        khangman pairs ktuberling kdiamond ksudoku kubrick
+        picmi bovo kblackbox kfourinline kmahjongg kreversi
+        ksquares kigo kiriki kshisen gnuchess katomic
+        kjumpingcube kmines knetwalk killbots klickety
+        klines konquest ksirk knavalbattle kanagram amor kajongg"
 
-    # Remove servidor X - Leave fluxbox # Safe propose
-    packagesList="$packagesList twm blackbox windowmaker fvwm"
+        # Remove XFCE or/and KDE
+        echo -en "\\nLeave XFCE or KDE?\\n(1) Leave KDE, (2) Leave XFCE, (3) Remove XFCE and KDE (hit enter to Leave KDE): "
+        read -r leaveXGUI
+        if [ "$leaveXGUI" == '1' ] || [ "$leaveXGUI" == '' ]; then
+            packagesListTmp=" xfce"
+        elif [ "$leaveXGUI" == '2' ]; then
+            packagesListTmp=" kde" # Also remove kde-l10n-
+        elif [ "$leaveXGUI" == '3' ]; then
+            packagesListTmp=" kde xfce" # Also remove kde-l10n-
+        fi
 
-    # Remove kopote
-    packagesList="$packagesList kdenetwork-filesharing kdenetwork-strigi-analyzers kopete"
+        echo -e "\\nWill remove \"$packagesListTmp\""
+        packagesList="$packagesList $packagesListTmp"
 
-    # Remove nepomuk
-    packagesList="$packagesList nepomuk-core nepomuk-widgets"
+        # Remove servidor X - Leave fluxbox # Safe propose
+        packagesList="$packagesList twm blackbox windowmaker fvwm"
 
-    # Remove akonadi
-    packagesList="$packagesList akonadi"
+        # Remove kopote
+        packagesList="$packagesList kdenetwork-filesharing kdenetwork-strigi-analyzers kopete"
 
-    # Remove kde-l10n- - others languages for the KDE
-    packagesList="$packagesList kde-l10n-"
+        # Remove nepomuk
+        packagesList="$packagesList nepomuk-core nepomuk-widgets"
 
-    echo -e "\\nRemove \"gnome packages\"? \"gcr- polkit-gnome gnome-themes libgnome-keyring gnome-keyring\""
-    echo "Recommended if you remove XFCE, but leave if you not remove XFCE."
-    echo -n "(y)es to remove or (n)ot remove (hit enter to remove): "
-    read -r removeGnomePackages
-    if [ "$removeGnomePackages" == 'y' ] || [ "$removeGnomePackages" == '' ]; then
-        # Remove gnome "packages" # gcr- to not remove libgcrypt
-        packagesList="$packagesList gcr- polkit-gnome gnome-themes libgnome-keyring gnome-keyring"
-        echo -en "\\nR"
+        # Remove akonadi
+        packagesList="$packagesList akonadi"
+
+        # Remove kde-l10n- - others languages for the KDE
+        packagesList="$packagesList kde-l10n-"
+
+        echo -e "\\nRemove \"gnome packages\"? \"gcr- polkit-gnome gnome-themes libgnome-keyring gnome-keyring\""
+        echo "Recommended if you remove XFCE, but leave if you not remove XFCE."
+        echo -n "(y)es to remove or (n)ot remove (hit enter to remove): "
+        read -r removeGnomePackages
+        if [ "$removeGnomePackages" == 'y' ] || [ "$removeGnomePackages" == '' ]; then
+            # Remove gnome "packages" # gcr- to not remove libgcrypt
+            packagesList="$packagesList gcr- polkit-gnome gnome-themes libgnome-keyring gnome-keyring"
+            echo -en "\\nR"
+        else
+            echo -en "\\nNot r"
+        fi
+        echo -e "emoving \"gnome packages\"\\n"
+
+        # Remove other packages
+        packagesList="$packagesList seamonkey pidgin xchat dragon thunderbird kplayer
+        calligra  xine-lib xine-ui emacs amarok audacious vim-gvim vim sendmail-cf sendmail xpdf tetex-doc tetex kget"
+
+        # Remove Bluetooth
+        #packagesList="$packagesList bluedevil blueman bluez-firmware bluez"
+
+        # Virtualbox need # Remove kernel-source
+        #packagesList="$packagesList kernel-source"
+
+        countI='0'
+        echo -e "\\nPackages that will be removed:\\n"
+        for packageName in $packagesList; do
+            echo -n "$packageName "
+            if [ "$countI" == "10" ]; then
+                echo
+                countI='0'
+            else
+                ((countI++))
+            fi
+        done
+
+        echo -en "\\n\\nWant continue? (y)es or (n)o: "
+        read -r continueOrNot
+        if [ "$continueOrNot" != 'y' ]; then
+            echo -e "\\nJust exiting by local choice\\n"
+            exit 0
+        fi
+
+        folderWork=${folderWork//\//} # Remove the / in the end
+        cd "$folderWork" || exit
+
+        filesIgnoredInTheISO="../0_filesIgnoredInTheISO.txt"
+        mkisofsExcludeList="../1_mkisofsExcludeList.txt"
+        filesNotFound="../2_filesNotFound.txt"
+
+        rm "$filesIgnoredInTheISO" "$mkisofsExcludeList" "$filesNotFound" 2> /dev/null
+
+        for packageName in $packagesList; do
+            echo -e "\\nLooking for \"$packageName\""
+            resultFind=$(find . | grep "$packageName" | grep -E ".t.z$|.asc$|.txt$")
+
+            if [ "$resultFind" == '' ]; then
+                echo "Not found: \"$packageName\"" | tee -a "$filesNotFound"
+            else
+                echo -e "Files ignored with the pattern: \"$packageName\"\\n$resultFind\\n" | tee -a "$filesIgnoredInTheISO"
+                echo "$resultFind" | rev | cut -d '/' -f1 | rev >> "$mkisofsExcludeList"
+            fi
+        done
     else
-        echo -en "\\nNot r"
+        echo -e "\\nUsing all packages"
     fi
-    echo -e "emoving \"gnome packages\"\\n"
-
-    # Remove other packages
-    packagesList="$packagesList seamonkey pidgin xchat dragon thunderbird kplayer
-    calligra  xine-lib xine-ui emacs amarok audacious vim-gvim vim sendmail-cf sendmail xpdf tetex-doc tetex kget"
-
-    # Remove Bluetooth
-    #packagesList="$packagesList bluedevil blueman bluez-firmware bluez"
-
-    # Virtualbox need # Remove kernel-source
-    #packagesList="$packagesList kernel-source"
-
-    countI='0'
-    echo -e "\\nPackages that will be removed:\\n"
-    for packageName in $packagesList; do
-        echo -n "$packageName "
-        if [ "$countI" == "10" ]; then
-            echo
-            countI='0'
-        else
-            ((countI++))
-        fi
-    done
-
-    echo -en "\\n\\nWant continue? (y)es or (n)o: "
-    read -r continueOrNot
-    if [ "$continueOrNot" != 'y' ]; then
-        echo -e "\\nJust exiting by local choice\\n"
-        exit 0
-    fi
-
-    folderWork=${folderWork//\//} # Remove the / in the end
-    cd "$folderWork" || exit
-
-    filesIgnoredInTheISO="../0_filesIgnoredInTheISO.txt"
-    mkisofsExcludeList="../1_mkisofsExcludeList.txt"
-    filesNotFound="../2_filesNotFound.txt"
-
-    rm "$filesIgnoredInTheISO" "$mkisofsExcludeList" "$filesNotFound" 2> /dev/null
-
-    for packageName in $packagesList; do
-        echo -e "\\nLooking for \"$packageName\""
-        resultFind=$(find . | grep "$packageName" | grep -E ".t.z$|.asc$|.txt$")
-
-        if [ "$resultFind" == '' ]; then
-            echo "Not found: \"$packageName\"" | tee -a "$filesNotFound"
-        else
-            echo -e "Files ignored with the pattern: \"$packageName\"\\n$resultFind\\n" | tee -a "$filesIgnoredInTheISO"
-            echo "$resultFind" | rev | cut -d '/' -f1 | rev >> "$mkisofsExcludeList"
-        fi
-    done
 
     echo -en "\\nWant create a ISO file from work folder?\\n(y)es - (n)o (press enter to no): "
     read -r generateISO
 
-    isoFileName="${folderWork}_SelectedPkgs_date_$(date +%d_%m_%Y)"
-
     if [ "$generateISO" == 'y' ]; then
-        cd .. || exit
-
         mkisofsExcludeList=${mkisofsExcludeList:3} # Remove ../ from the path
         filesNotFound=${filesNotFound:3}
         filesIgnoredInTheISO=${filesIgnoredInTheISO:3}
 
         echo -e "\\nCreating ISO file. Please wait...\\n"
-        mkisofs -exclude-list "$mkisofsExcludeList" -pad -r -J -o "${isoFileName}.iso" "$folderWork/"
+        if [ "$usePackagesList" == '1' ]; then
+            isoFileName="${folderWork}_AllPackages_date_$(date +%d_%m_%Y)"
+
+            mkisofs -pad -r -J -o "${isoFileName}.iso" "$folderWork"
+
+            exit 0 # Exit to not print tho look the files used in usePackagesList
+        else
+            cd .. || exit # Up folder because in usePackagesList go to packages folder
+
+            isoFileName="${folderWork}_SelectedPkgs_date_$(date +%d_%m_%Y)"
+
+            mkisofs -exclude-list "$mkisofsExcludeList" -pad -r -J -o "${isoFileName}.iso" "$folderWork/"
+        fi
 
         # -exclude-list FILE - File with list of file names to exclude
         # -pad                 Pad output to a multiple of 32k (default)
