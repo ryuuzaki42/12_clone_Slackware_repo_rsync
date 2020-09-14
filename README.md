@@ -12,11 +12,11 @@ $ ./clone_Slackware_repo_JBs.sh
 * the **Slackware version** (e.g., **14.1**, **14.2**, **current**)
 * the architecture (**32** or **64** bits)
 * with **sorce code** or not
-* with **md5 test** or not
+* with **md5 checksum** or not
 
 #### Also can create a ISO file with:
 
 ```sh
 $ ./create_ISO_without_some_packages_JBs.sh
 ```
-You can create the ISO with all packages or remove all the packages in **packagesList** from the final ISO.
+You can create the ISO with all packages or remove all the packages in **packagesList** from the final ISO
