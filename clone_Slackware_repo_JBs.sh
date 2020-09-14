@@ -65,11 +65,17 @@ if [ "$changeMirror" == 'y' ]; then
     echo -e "$CYAN\\nNew mirror:$GREEN $mirrorSource$NC"
 fi
 
-echo -en "\\n$CYAN# Most downloaded versions:$GREEN 14.0, 14.1, 14.2, Current$CYAN\\nWith version Slackware you want? $GREEN(press enter to 14.2):$NC "
+if find . -maxdepth 1 -type d | grep -q "current"; then
+    defaultSuggest="current"
+else
+    defaultSuggest="14.2"
+fi
+
+echo -en "\\n$CYAN# Most downloaded versions:$GREEN 14.0, 14.1, 14.2, current$CYAN\\nWith version Slackware you want? $GREEN(press enter to $defaultSuggest):$NC "
 read -r versionSlackware
 
 if [ "$versionSlackware" == '' ]; then
-    versionSlackware="14.2"
+    versionSlackware=$defaultSuggest
 fi
 
 if echo "$versionSlackware" | grep -qv "current"; then # If not Slackware, can downlad only the updates
