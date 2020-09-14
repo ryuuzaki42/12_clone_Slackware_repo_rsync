@@ -22,9 +22,9 @@
 #
 # Script: Clone some Slackware repository to a local source
 #
-# Last update: 07/02/2018
+# Last update: 14/09/2020
 #
-# Tip: Use the file inside one "old" ISO to make less things to download
+# Tip: Use this script with a "old" local mirror (or ISO) to download less files
 #
 input1=$1
 if [ "$input1" == "noColor" ]; then
@@ -65,23 +65,26 @@ if [ "$changeMirror" == 'y' ]; then
     echo -e "$CYAN\\nNew mirror:$GREEN $mirrorSource$NC"
 fi
 
-echo -en "$CYAN\\nWith version Slackware you want? $GREEN(press enter to 14.2):$NC "
+echo -en "\\n$CYAN# Most downloaded versions:$GREEN 14.0, 14.1, 14.2, Current$CYAN\\nWith version Slackware you want? $GREEN(press enter to 14.2):$NC "
 read -r versionSlackware
 
 if [ "$versionSlackware" == '' ]; then
     versionSlackware="14.2"
 fi
 
-if echo "$versionSlackware" | grep -qv "current"; then
-    echo -e "\\n\\t$RED#--------------------------------------------------------------------------#"
-    echo -en "$CYAN\\t# Downlad only the patches (patches/)? (y)es - (n)o $GREEN(press enter to yes):$NC "
-    read -r onlyPatches
+if echo "$versionSlackware" | grep -qv "current"; then # If not Slackware, can downlad only the updates
+    if find . -maxdepth 1 -type d | grep -q "$versionSlackware"; then # If found a old download, can suggest the updates only
+        echo -e "\\n\\t$RED#---------------------------------------------------------------------------------#"
+        echo -e "$CYAN\\t# This option set to download only the updates - Useful to update the local mirror"
+        echo -en "$CYAN\\t# Downlad only the patches (patches/)? (y)es - (n)o $GREEN(press enter to yes):$NC "
+        read -r onlyPatches
 
-    if [ "$onlyPatches" == '' ] || [ "$onlyPatches" == 'y' ]; then
-        onlyPatches='y'
-        echo -en "\\n$BLUE# Downloading only the patches #\\n$NC"
-    else
-        echo -en "\\n$BLUE# Downloading all the files #\\n$NC"
+        if [ "$onlyPatches" == '' ] || [ "$onlyPatches" == 'y' ]; then
+            onlyPatches='y'
+            echo -en "\\n$BLUE# Downloading only the patches #\\n$NC"
+        else
+            echo -en "\\n$BLUE# Downloading all the files #\\n$NC"
+        fi
     fi
 fi
 
