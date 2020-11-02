@@ -1,7 +1,7 @@
-## clone_Slackware_repo
-Clone Slackware mirror to a local folder
+## clone_Slackware_repo_rsync
+Clone Slackware mirror to a local folder using rsync
 
-#### Default mirror : ftp://ftp.osuosl.org/.2/slackware/
+#### Default mirror : rsync://ftp.osuosl.org/slackware
 
 #### Use:
 ```sh
@@ -17,6 +17,6 @@ $ ./clone_Slackware_repo_JBs.sh
 #### Also can create a ISO file with:
 
 ```sh
-$ ./create_ISO_without_some_packages_JBs.sh
+$ ./create_ISO_without_some_packages_rsync_JBs.sh
 ```
 You can create the ISO with all packages or remove all the packages in **packagesList** from the final ISO
