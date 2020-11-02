@@ -20,7 +20,7 @@
 #
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script: Clone some Slackware repository to a local source
+# Script: Clone some Slackware repository to a local source using rsync
 #
 # Last update: 02/11/2020
 #
@@ -138,7 +138,7 @@ else
         echo -e "$CYAN\\nOlder folder download found ($GREEN$versionDownload/$CYAN)$NC"
 
         echo -en "$CYAN\\nDownloading$BLUE ChangeLog.txt$CYAN to make a$BLUE fast check$CYAN (the$BLUE local$GREEN "
-        echo -e "ChangeLog.txt$CYAN with the$BLUE server$GREEN ChangeLog.txt$CYAN)$NC. Please wait...\\n"
+        echo -en "ChangeLog.txt$CYAN with the$BLUE server$GREEN ChangeLog.txt$CYAN).$NC Please wait..."
         rsync -aqz "$mirrorSource/$versionDownload/ChangeLog.txt" ./ChangeLog.txt
 
         cd "$versionDownload" || exit
@@ -195,13 +195,14 @@ else
     fi
 
     if [ "$contineOrJump" == 'y' ]; then
-        rsyncCommand="rsync -ahv --delete $removeSoure $onlyPatchesDl $mirrorSource/$versionDownload ./"
+        rsyncCommand="rsync -ahv --delete --progress $removeSoure $onlyPatchesDl $mirrorSource/$versionDownload ./"
 
         # -a archive mode, equivalent to -rlptgoD - recursion and want to preserve almost everything
         # -h output numbers in a human-readable format; -v increase verbosity
         # --delete delete extraneous files from destination directories
+        # --progress print information showing the progress of the transfer
 
-        echo -en "$CYAN\\nDownloading files$NC. Please wait...\\n\\n"
+        echo -en "$CYAN\\nDownloading files.$NC Please wait...\\n\\n"
         echo "$rsyncCommand"
         eval "$rsyncCommand"
     fi
