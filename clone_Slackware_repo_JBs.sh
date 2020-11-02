@@ -22,7 +22,7 @@
 #
 # Script: Clone some Slackware repository to a local source
 #
-# Last update: 14/09/2020
+# Last update: 02/11/2020
 #
 # Tip: Use this script with a "old" local mirror (or ISO) to download less files
 #
@@ -45,7 +45,7 @@ if [ "$input1" == "testColor" ]; then
     echo -e "\\n\\tTest colors: $RED RED $WHITE WHITE $PINK PINK $BLACK BLACK $BLUE BLUE $GREEN GREEN $CYAN CYAN $NC NC\\n"
 fi
 
-mirrorSource="ftp://ftp.osuosl.org/.2/slackware"
+mirrorSource="rsync://ftp.osuosl.org/slackware"
 echo -e "$CYAN\\nDefault mirror:$GREEN $mirrorSource$NC"
 
 echo -en "$CYAN\\nWant change the mirror?$NC\\n(y)es - (n)o $GREEN(press enter to no):$NC "
@@ -54,11 +54,11 @@ read -r changeMirror
 if [ "$changeMirror" == 'y' ]; then
     mirrorSource=''
 
-    while echo "$mirrorSource" | grep -v -q -E "ftp|http"; do
+    while echo "$mirrorSource" | grep -v -q "rsync"; do
         echo -en "$CYAN\\nType the new mirror:$NC "
         read -r mirrorSource
 
-        if echo "$mirrorSource" | grep -v -q -E "ftp|http"; then
+        if echo "$mirrorSource" | grep -v -q "rsync"; then
             echo -e "$RED\\nError: the mirror \"$mirrorSource\" is not valid.\\nOne valid mirror has \"ftp\" or \"http\"$NC"
         fi
     done
@@ -108,7 +108,7 @@ versionDownload="slackware$choosedArch-$versionSlackware"
 echo -en "$CYAN\\nWant download the source code?$NC\\n(y)es - (n)o $GREEN(press enter to no):$NC "
 read -r downloadSource
 
-echo -en "$CYAN\\nWill download (by lftp) $GREEN\"$versionDownload\"$CYAN"
+echo -en "$CYAN\\nWill download (by rsync) $GREEN\"$versionDownload\"$CYAN"
 if [ "$downloadSource" == 'y' ]; then
     echo -en "$RED with $CYAN"
 else
@@ -123,21 +123,23 @@ if [ "$contineLftp" == 'n' ]; then
     echo -e "$CYAN\\nJust exiting by user choice$NC\\n"
 else
     if [ "$downloadSource" != 'y' ]; then
-        removeSoure="-x source/ -x patches/source/ -x /pasture/source/"
-        grepRemove=$(echo "$removeSoure" | sed 's/-x //g' | sed 's/ /|/g')
+        removeSoure="--exclude={'source/','patches/source/','pasture/source/'}"
+        grepRemove=$removeSoure
     fi
 
     if [ "$onlyPatches" == 'y' ]; then
-        onlyPatchesDl="-x EFI/ -x extra/ -x isolinux/ -x kernels/ -x pasture/ -x slackware64/ -x testing/ -x usb-and-pxe-installers/"
-        grepRemove="$grepRemove|"$(echo "$onlyPatchesDl" | sed 's/-x //g' | sed 's/ /|/g')
+        onlyPatchesDl="--exclude={'EFI/','extra/','isolinux/','kernels/','pasture/','slackware64/','testing/','usb-and-pxe-installers/'}"
+        grepRemove=$grepRemove$onlyPatchesDl
     fi
+
+    grepRemove=$(echo "$grepRemove" | sed 's/\-\-exclude={//g' | sed 's/,//g' | sed 's/}//g' | sed 's/'\''/|/g' | sed 's/||/|/g' | sed 's/^|//g' | sed 's/|$//g' )
 
     if [ -e $versionDownload/ ]; then
         echo -e "$CYAN\\nOlder folder download found ($GREEN$versionDownload/$CYAN)$NC"
 
         echo -en "$CYAN\\nDownloading$BLUE ChangeLog.txt$CYAN to make a$BLUE fast check$CYAN (the$BLUE local$GREEN "
         echo -e "ChangeLog.txt$CYAN with the$BLUE server$GREEN ChangeLog.txt$CYAN)$NC. Please wait...\\n"
-        wget "$mirrorSource"/"$versionDownload"/ChangeLog.txt -O ChangeLog.txt
+        rsync -aqz "$mirrorSource/$versionDownload/ChangeLog.txt" ./ChangeLog.txt
 
         cd "$versionDownload" || exit
         changeLogLocalMd5sum=$(md5sum ChangeLog.txt)
@@ -193,12 +195,15 @@ else
     fi
 
     if [ "$contineOrJump" == 'y' ]; then
-        echo -en "$CYAN\\nDownloading files$NC. Please wait...\\n\\n"
+        rsyncCommand="rsync -ahv --delete $removeSoure $onlyPatchesDl $mirrorSource/$versionDownload ./"
 
-        lftp -c 'open '"$mirrorSource"'; mirror -c -e '"$removeSoure"' '"$onlyPatchesDl"' '"$versionDownload"'/'
-        # -c continue a mirror job if possible
-        # -e delete files not present at remote site
-        # -x RX exclude matching files
+        # -a archive mode, equivalent to -rlptgoD - recursion and want to preserve almost everything
+        # -h output numbers in a human-readable format; -v increase verbosity
+        # --delete delete extraneous files from destination directories
+
+        echo -en "$CYAN\\nDownloading files$NC. Please wait...\\n\\n"
+        echo "$rsyncCommand"
+        eval "$rsyncCommand"
     fi
 
     if [ "$tmpMd5sumBeforeDownload" != '' ]; then
