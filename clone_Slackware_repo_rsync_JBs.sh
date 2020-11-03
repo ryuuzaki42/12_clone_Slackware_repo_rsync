@@ -22,7 +22,7 @@
 #
 # Script: Clone some Slackware repository to a local source using rsync
 #
-# Last update: 02/11/2020
+# Last update: 03/11/2020
 #
 # Tip: Use this script with a "old" local mirror (or ISO) to download less files
 #
