@@ -178,10 +178,9 @@ else
 
             if [ "$useMd5sumCheckBeforeDownload" == 'y' ]; then
                 tmpMd5sumBeforeDownload=$(mktemp)
-
                 listOfFilesBeforeDownload=$(find $versionDownload/ -type f -print)
 
-                echo -en "$CYAN\\nCreating a$BLUE md5sum$RED (before the download)$CYAN from files found (in the folder $GREEN$versionDownload/$CYAN)$NC. Please wait..."
+                echo -en "$CYAN\\nCreating a$BLUE md5sum$RED (before the download)$CYAN from files found (in the folder $GREEN$versionDownload/$CYAN).$NC Please wait..."
                 for file in $listOfFilesBeforeDownload; do
                     md5sum "$file" >> "$tmpMd5sumBeforeDownload"
                 done
@@ -212,13 +211,13 @@ else
 
         listOfFilesAfterDownload=$(find $versionDownload/ -type f -print)
 
-        echo -en "$CYAN\\nCreating a$BLUE md5sum$RED (after the download)$CYAN from files (in the folder $GREEN$versionDownload/$CYAN)$NC. Please wait..."
+        echo -en "$CYAN\\nCreating a$BLUE md5sum$RED (after the download)$CYAN from files (in the folder $GREEN$versionDownload/$CYAN).$NC Please wait..."
         for file in $listOfFilesAfterDownload; do
             md5sum "$file" >> "$tmpMd5sumAfterDownload"
         done
         echo -e "$CYAN\\n\\nThe$BLUE md5sum$RED (after the download)$CYAN was saved in the tmp file: $GREEN$tmpMd5sumAfterDownload$NC"
 
-        echo -en "$CYAN\\nChecking the changes in the files$BLUE before$CYAN with$BLUE after$CYAN download$NC. Please wait..."
+        echo -en "$CYAN\\nChecking the changes in the files$BLUE before$CYAN with$BLUE after$CYAN download.$NC Please wait..."
         changeResult=$(diff -w "$tmpMd5sumBeforeDownload" "$tmpMd5sumAfterDownload")
 
         if [ "$changeResult" == '' ]; then
@@ -276,7 +275,7 @@ else
     read -r checkFiles
 
     if [ "$checkFiles" == 'y' ] || [ "$checkFiles" == '' ]; then
-        echo -en "$CYAN\\nChecking the integrity of the files$NC. Please wait..."
+        echo -en "$CYAN\\nChecking the integrity of the files.$NC Please wait..."
         checkFilesResult=$(tail +13 CHECKSUMS.md5 | grep -vE "$grepRemove" | md5sum -c --quiet)
 
         echo -en "$CYAN\\n\\nFiles integrity:"
