@@ -22,7 +22,7 @@
 #
 # Script: Clone some Slackware repository to a local source using rsync
 #
-# Last update: 03/11/2020
+# Last update: 10/11/2020
 #
 # Tip: Use this script with a "old" local mirror (or ISO) to download less files
 #
@@ -102,11 +102,13 @@ if [ "$choosedArch" == '1' ]; then
 else
     choosedArch="64" # Slackware 64 bits has folder slackware64-Version
 fi
-
 versionDownload="slackware$choosedArch-$versionSlackware"
 
 echo -en "$CYAN\\nWant download the source code?$NC\\n(y)es - (n)o $GREEN(press enter to no):$NC "
 read -r downloadSource
+
+echo -en "$CYAN\\nWant download the \"testing/\" (folder - packages)?$NC\\n(y)es - (n)o $GREEN(press enter to no):$NC "
+read -r downloadTesting
 
 echo -en "$CYAN\\nWill download (by rsync) $GREEN\"$versionDownload\"$CYAN"
 if [ "$downloadSource" == 'y' ]; then
@@ -114,12 +116,19 @@ if [ "$downloadSource" == 'y' ]; then
 else
     echo -en "$RED without $CYAN"
 fi
-echo -e "the$BLUE source code$CYAN from $GREEN\"$mirrorSource\"$NC"
+echo -en "the$BLUE source code$CYAN and"
+
+if [ "$downloadTesting" == 'y' ]; then
+    echo -en "$RED with $CYAN"
+else
+    echo -en "$RED without $CYAN"
+fi
+echo -e "the$BLUE \"testing/\"$CYAN from $GREEN\"$mirrorSource\"$NC"
 
 echo -en "$CYAN\\nWant continue?$NC\\n(y)es - (n)o $GREEN(press enter to yes):$NC "
-read -r contineLftp
+read -r contineRsync
 
-if [ "$contineLftp" == 'n' ]; then
+if [ "$contineRsync" == 'n' ]; then
     echo -e "$CYAN\\nJust exiting by user choice$NC\\n"
 else
     if [ "$downloadSource" != 'y' ]; then
@@ -127,12 +136,21 @@ else
         grepRemove=$removeSoure
     fi
 
+    if [ "$downloadTesting" != 'y' ]; then
+        removeTesting="--exclude \"testing/\""
+        grepRemove=$grepRemove$removeTesting
+    fi
+
     if [ "$onlyPatches" == 'y' ]; then
         onlyPatchesDl="--exclude={'EFI/','extra/','isolinux/','kernels/','pasture/','slackware64/','testing/','usb-and-pxe-installers/'}"
         grepRemove=$grepRemove$onlyPatchesDl
     fi
 
-    grepRemove=$(echo "$grepRemove" | sed 's/\-\-exclude={//g' | sed 's/,//g' | sed 's/}//g' | sed 's/'\''/|/g' | sed 's/||/|/g' | sed 's/^|//g' | sed 's/|$//g' )
+    # Remove "--exclude", " ", "={", "," and "}" form grepRemove
+    grepRemove=$(echo "$grepRemove" | sed 's/\-\-exclude//g'| sed 's/ //g' | sed 's/={//g' | sed 's/,//g' | sed 's/}//g')
+
+    # Change """, "'" and "||" in "|" and remove "^|" and "$|"
+    grepRemove=$(echo "$grepRemove" | sed 's/"/|/g' | sed 's/'\''/|/g' | sed 's/||/|/g' | sed 's/^|//g' | sed 's/|$//g' )
 
     if [ -e $versionDownload/ ]; then
         echo -e "$CYAN\\nOlder folder download found ($GREEN$versionDownload/$CYAN)$NC"
@@ -194,7 +212,7 @@ else
     fi
 
     if [ "$contineOrJump" == 'y' ]; then
-        rsyncCommand="rsync -ahv --delete --progress $removeSoure $onlyPatchesDl $mirrorSource/$versionDownload ./"
+        rsyncCommand="rsync -ahv --delete --progress $removeSoure $removeTesting $onlyPatchesDl $mirrorSource/$versionDownload ./"
 
         # -a archive mode, equivalent to -rlptgoD - recursion and want to preserve almost everything
         # -h output numbers in a human-readable format; -v increase verbosity
@@ -275,7 +293,7 @@ else
     read -r checkFiles
 
     if [ "$checkFiles" == 'y' ] || [ "$checkFiles" == '' ]; then
-        echo -en "$CYAN\\nChecking the integrity of the files.$NC Please wait..."
+        echo -en "$CYAN\\nChecking the integrity of the files.\\nIgnoring: $BLUE$grepRemove$NC\\nPlease wait..."
         checkFilesResult=$(tail +13 CHECKSUMS.md5 | grep -vE "$grepRemove" | md5sum -c --quiet)
 
         echo -en "$CYAN\\n\\nFiles integrity:"
