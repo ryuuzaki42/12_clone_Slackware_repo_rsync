@@ -7,6 +7,4 @@ slackware*.iso
 # Log files from mkisofs
 0_filesIgnoredInTheISO.txt
 1_mkisofsExcludeList.txt
-
-# Log files from upgrade_slackware_clone_JBs.sh
-upgradePkgLog.r
+2_filesNotFound.txt
