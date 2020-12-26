@@ -22,7 +22,7 @@
 #
 # Script: Create a ISO without some package from a local directory that you don't want
 #
-# Last update: 14/09/2020
+# Last update: 26/12/2020
 #
 # Tip: Add the packages you want in the packagesList
 # Need one space before add more
@@ -53,7 +53,7 @@ else
         khangman pairs ktuberling kdiamond ksudoku kubrick
         picmi bovo kblackbox kfourinline kmahjongg kreversi
         ksquares kigo kiriki kshisen gnuchess katomic
-        kjumpingcube kmines knetwalk killbots klickety
+        kjumpingcube kmines knetwalk killbots klickety xsnow
         klines konquest ksirk knavalbattle kanagram amor kajongg"
 
         # Remove XFCE or/and KDE
@@ -71,7 +71,7 @@ else
         packagesList="$packagesList $packagesListTmp"
 
         # Remove servidor X - Leave fluxbox # Safe propose
-        packagesList="$packagesList twm blackbox windowmaker fvwm"
+        packagesList="$packagesList twm blackbox windowmaker fvwm motif"
 
         # Remove kopote
         packagesList="$packagesList kdenetwork-filesharing kdenetwork-strigi-analyzers kopete"
@@ -100,8 +100,11 @@ else
 
         # Remove other packages
         packagesList="$packagesList seamonkey pidgin xchat dragon thunderbird kplayer
-        calligra  xine-lib xine-ui emacs amarok audacious vim-gvim vim sendmail-cf sendmail xpdf tetex-doc tetex kget"
+        calligra xine-lib xine-ui emacs amarok audacious vim-gvim vim sendmail-cf sendmail xpdf kget"
 
+        # Remove textex / textlive
+        packagesList="$packagesList tetex-doc tetex texlive"
+        
         # Remove Bluetooth
         #packagesList="$packagesList bluedevil blueman bluez-firmware bluez"
 
