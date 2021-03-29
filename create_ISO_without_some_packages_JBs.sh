@@ -155,7 +155,7 @@ else
         echo -e "\\nUsing all packages"
     fi
 
-    isoFileName="${folderWork}_AllPackages_date_$(date +%d_%m_%Y)"
+    isoFileName="${folderWork}_AllPkgs_date_$(date +%d_%m_%Y)"
     dateISO=$(date +%d_%b_%Y)
     localISO=$(pwd | rev| cut -d '/' -f2- | rev)
     commandGenISOPart2=""
