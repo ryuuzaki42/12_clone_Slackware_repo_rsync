@@ -22,7 +22,7 @@
 #
 # Script: Clone some Slackware repository to a local source using rsync
 #
-# Last update: 28/03/2021
+# Last update: 21/07/2021
 #
 # Tip: Use this script with a "old" local mirror (or ISO) to download less files
 #
@@ -45,7 +45,7 @@ if [ "$input1" == "testColor" ]; then
     echo -e "\\n\\tTest colors: $RED RED $WHITE WHITE $PINK PINK $BLACK BLACK $BLUE BLUE $GREEN GREEN $CYAN CYAN $NC NC\\n"
 fi
 
-mirrorSource="rsync://ftp.osuosl.org/slackware"
+mirrorSource="rsync://slackware.uk/slackware/"
 echo -e "$CYAN\\nDefault mirror:$GREEN $mirrorSource$NC"
 
 echo -en "$CYAN\\nWant change the mirror?$NC\\n(y)es - (n)o $GREEN(press enter to no):$NC "
