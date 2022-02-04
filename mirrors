@@ -17,12 +17,13 @@ bg - rsync://mirrors.slackware.bg/slackware/
 bg - rsync://mirrors.unixsol.org/slackware/
 bg - rsync://slackware.telecoms.bg/slackware/
 br - rsync://linorg.usp.br/slackware/
+br - rsync://slackjeff.com.br/slackware/
 br - rsync://slackware-brasil.com.br/slackware/
 by - rsync://mirror.datacenter.by/slackware/
 ca - rsync://mirror.csclub.uwaterloo.ca/slackware/
 ca - rsync://mirror.its.dal.ca/slackware/
 cn - rsync://mirrors.bfsu.edu.cn/slackware/
-cr - rsync://mirrors.ucr.ac.cr/slackware/pub/slackware/
+cr - rsync://mirrors.ucr.ac.cr/slackware/
 cz - rsync://ftp.linux.cz/pub/linux/slackware/
 de - rsync://download.dlackware.com/slackware/
 de - rsync://ftp.tu-chemnitz.de/ftp/pub/linux/slackware/
@@ -48,11 +49,11 @@ hu - rsync://quantum-mirror.hu/slackware/
 id - rsync://iso.ukdw.ac.id/iso/slackware/
 id - rsync://repo.ukdw.ac.id/slackware/
 it - rsync://mirror.garr.it/slackware/
-jp - rsync://ftp.kddilabs.jp/slackware/
 jp - rsync://ftp.nara.wide.ad.jp/slackware/
 jp - rsync://ftp.riken.go.jp/slackware/
 lt - rsync://mirrors.atviras.lt/slackware/
 lt - rsync://slackware.laukas.lt/slackware/
+mc - rsync://slackware.qontinuum.space/slackware/
 md - rsync://mirror.ihost.md/slackware/
 nc - rsync://mirror.lagoon.nc/slackware/
 nl - rsync://bear.alienbase.nl/mirrors/slackware/
@@ -84,7 +85,6 @@ us - rsync://ftp.slackware.com/slackware/
 us - rsync://ftp.ussg.indiana.edu/slackware/
 us - rsync://mirror.cs.princeton.edu/slackware/
 us - rsync://mirror.slackbuilds.org/slackware/
-us - rsync://mirror.us.leaseweb.net/slackware/
 us - rsync://mirrors.kernel.org/slackware/
 us - rsync://mirrors.syringanetworks.net/slackware/
 us - rsync://mirrors.xmission.com/slackware/
