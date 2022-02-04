@@ -22,7 +22,7 @@
 #
 # Script: Create a ISO without some package from a local directory that you don't want
 #
-# Last update: 28/03/2021
+# Last update: 04/02/2022
 #
 # Tip: Add the packages you want in the packagesList
 # Need one space before add more
@@ -51,14 +51,17 @@ else
         # packagesList="$packagesList ktorrent libktorrent"
 
         # Remove games
-        packagesList="palapeli bomber granatier
-        kblocks ksnakeduel kbounce kbreakout kgoldrunner
-        kspaceduel kapman kolf kollision kpat lskat blinken
-        khangman pairs ktuberling kdiamond ksudoku kubrick
-        picmi bovo kblackbox kfourinline kmahjongg kreversi
-        ksquares kigo kiriki kshisen gnuchess katomic
-        kjumpingcube kmines knetwalk killbots klickety xsnow
-        klines konquest ksirk knavalbattle kanagram amor kajongg"
+        packagesList="palapeli bomber granatier kblocks ksnakeduel kbounce kbreakout kgoldrunner
+        kspaceduel kapman kolf kollision kpat lskat blinken khangman pairs ktuberling katomic
+        kjumpingcube kmines knetwalk kdiamond ksudoku kubrick picmi bovo kblackbox kfourinline
+        kmahjongg kreversi ksquares kigo kiriki kshisen killbots klickety klines konquest ksirk
+        knavalbattle kanagram amor kajongg xsnow libgtop"
+
+        # Remove knights gnuchess
+        packagesList="$packagesList knights gnuchess"
+
+        # Remove plasma-vault
+        packagesList="$packagesList plasma-vault"
 
         # Remove XFCE or/and KDE
         echo -en "\\nLeave XFCE or KDE?\\n(1) Leave KDE, (2) Leave XFCE, (3) Remove XFCE and KDE (hit enter to Leave KDE): "
@@ -106,7 +109,7 @@ else
         packagesList="$packagesList seamonkey pidgin xchat dragon thunderbird kplayer
         calligra xine-lib xine-ui emacs amarok audacious vim-gvim vim sendmail-cf sendmail xpdf kget"
 
-        # Remove textex / textlive
+        # Remove tetex (Slackware 14.2) / texlive (Slackware 15.0 and Current)
         packagesList="$packagesList tetex-doc tetex texlive"
 
         # Remove Bluetooth
@@ -119,7 +122,7 @@ else
         echo -e "\\nPackages that will be removed:\\n"
         for packageName in $packagesList; do
             echo -n "$packageName "
-            if [ "$countI" == "10" ]; then
+            if [ "$countI" == "8" ]; then
                 echo
                 countI='0'
             else
