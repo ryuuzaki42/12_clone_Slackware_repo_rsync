@@ -1,7 +1,7 @@
 ## clone_Slackware_repo_rsync
 Clone Slackware mirror to a local folder using rsync
 
-#### Default mirror : rsync://ftp.osuosl.org/slackware
+#### Default mirror : rsync://slackware.uk/slackware
 
 #### Use:
 ```sh
