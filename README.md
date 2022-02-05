@@ -9,7 +9,7 @@ $ ./clone_Slackware_repo_JBs.sh
 ```
 
 #### You can chose:
-* the **Slackware version** (e.g., **14.1**, **14.2**, **current**)
+* the **Slackware version** (e.g., **14.2**, **15.0**, **current**)
 * the architecture (**32** or **64** bits)
 * with **sorce code** or not
 * with **md5 checksum** or not

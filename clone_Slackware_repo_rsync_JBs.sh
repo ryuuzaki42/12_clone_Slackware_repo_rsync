@@ -22,7 +22,7 @@
 #
 # Script: Clone some Slackware repository to a local source using rsync
 #
-# Last update: 04/02/2022
+# Last update: 05/02/2022
 #
 # Tip: Use this script with a "old" local mirror (or ISO) to download less files
 #
@@ -71,7 +71,7 @@ else
     defaultSuggest="15.0"
 fi
 
-echo -en "\\n$CYAN# Most downloaded versions:$GREEN 14.0, 14.1, 14.2, 15.0, current$CYAN\\nWith version Slackware you want? $GREEN(press enter to $defaultSuggest):$NC "
+echo -en "\\n$CYAN# Most downloaded versions:$GREEN 14.2, 15.0, current$CYAN\\nWith version Slackware you want? $GREEN(press enter to $defaultSuggest):$NC "
 read -r versionSlackware
 
 if [ "$versionSlackware" == '' ]; then
