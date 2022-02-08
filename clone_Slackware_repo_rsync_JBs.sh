@@ -22,7 +22,7 @@
 #
 # Script: Clone some Slackware repository to a local source using rsync
 #
-# Last update: 05/02/2022
+# Last update: 08/02/2022
 #
 # Tip: Use this script with a "old" local mirror (or ISO) to download less files
 #
@@ -357,6 +357,7 @@ else
             echo -e "\\t\\t $(find $filesNotFound 2> /dev/null | rev | cut -d '/' -f1 | rev)"
         fi
     else
-        echo -e "\\n\\nExiting...\\n\\nIf you want create a ISO file, use:\\n\\ncd $localISO/\\n\\n$commandGenISO\\n"
+        echo -e "\\n\\nExiting...$CYAN\\nIf you want create a ISO file, use:$GREEN\\n\\ncd $localISO/\\n\\n$commandGenISO"
+        echo -e "$CYAN\\nOr use the script$BLUE create_ISO_without_some_packages_JBs.sh\\n$NC"
     fi
 fi
