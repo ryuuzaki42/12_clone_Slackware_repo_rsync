@@ -78,11 +78,13 @@ if [ "$versionSlackware" == '' ]; then
     versionSlackware=$defaultSuggest
 fi
 
-if echo "$versionSlackware" | grep -qv "current"; then # If not Slackware, can downlad only the updates
-    if find . -maxdepth 1 -type d | grep -q "$versionSlackware"; then # If found a old download, can suggest the updates only
+if echo "$versionSlackware" | grep -qv "current"; then # If not Slackware current, can download only the updates
+    oldFolder=$(find . -maxdepth 1 -type d | grep "$versionSlackware")
+    if [ "$oldFolder" != "" ]; then # If found a old download, can suggest the updates only
         echo -e "\\n\\t$RED#---------------------------------------------------------------------------------#"
-        echo -e "$CYAN\\t# This option set to download only the updates - Useful to update the local mirror"
-        echo -en "$CYAN\\t# Downlad only the patches (patches/)? (y)es - (n)o $GREEN(press enter to yes):$NC "
+        echo -e "$CYAN\\t# A old downloaded folder was found:$BLUE ${oldFolder:2}/"
+        echo -e "$CYAN\\t# This option set to download only the patches (\"updates\") - Useful to update a local mirror"
+        echo -en "\\t# Downlad only the patches (folder: patches/)? (y)es - (n)o $GREEN(press enter to yes):$NC "
         read -r onlyPatches
 
         if [ "$onlyPatches" == '' ] || [ "$onlyPatches" == 'y' ]; then
@@ -98,9 +100,9 @@ echo -en "$CYAN\\nWith arch you want?$NC\\n(1) - 32 bits or (2) - 64 bits $GREEN
 read -r choosedArch
 
 if [ "$choosedArch" == '1' ]; then
-    choosedArch='' # Slackware 32 bits has folder name slackware-Version
+    choosedArch='' # Slackware 32 bits has folder name slackware-version
 else
-    choosedArch="64" # Slackware 64 bits has folder slackware64-Version
+    choosedArch="64" # Slackware 64 bits has folder slackware64-version
 fi
 versionDownload="slackware$choosedArch-$versionSlackware"
 
@@ -110,22 +112,22 @@ read -r downloadSource
 echo -en "$CYAN\\nWant download the \"testing/\" (folder - packages)?$NC\\n(y)es - (n)o $GREEN(press enter to no):$NC "
 read -r downloadTesting
 
-echo -en "$CYAN\\nWill download (by rsync) $GREEN\"$versionDownload\"$CYAN"
-if [ "$downloadSource" == 'y' ]; then
-    echo -en "$RED with $CYAN"
-else
-    echo -en "$RED without $CYAN"
+echo -en "$CYAN\\nWill download (by rsync)"
+if [ "$onlyPatches" == 'y' ]; then
+    echo -en "$RED only the patches$CYAN of"
 fi
-echo -en "the$BLUE source code$CYAN and"
 
-if [ "$downloadTesting" == 'y' ]; then
-    echo -en "$RED with $CYAN"
-else
-    echo -en "$RED without $CYAN"
+echo -en "$GREEN\"$versionDownload\"$RED with"
+if [ "$downloadSource" != 'y' ]; then
+    echo -n "out"
 fi
-echo -e "the$BLUE \"testing/\"$CYAN from $GREEN\"$mirrorSource\"$NC"
 
-echo -en "$CYAN\\nWant continue?$NC\\n(y)es - (n)o $GREEN(press enter to yes):$NC "
+echo -en "$CYAN the$BLUE source code$CYAN and$RED with"
+if [ "$downloadTesting" != 'y' ]; then
+    echo -n "out"
+fi
+echo -e "$CYAN the$BLUE \"testing/\"$CYAN from $GREEN\"$mirrorSource\""
+echo -en "${CYAN}Want continue?$NC(y)es - (n)o $GREEN(press enter to yes):$NC "
 read -r contineRsync
 
 if [ "$contineRsync" == 'n' ]; then
@@ -155,7 +157,7 @@ else
     if [ -e $versionDownload/ ]; then
         echo -e "$CYAN\\nOlder folder download found ($GREEN$versionDownload/$CYAN)$NC"
 
-        echo -en "$CYAN\\nDownloading$BLUE ChangeLog.txt$CYAN to make a$BLUE fast check$CYAN (the$BLUE local$GREEN "
+        echo -en "$CYAN\\nDownloading$BLUE ChangeLog.txt$CYAN to make a$BLUE fast check$CYAN ($BLUE local$GREEN "
         echo -en "ChangeLog.txt$CYAN with the$BLUE server$GREEN ChangeLog.txt$CYAN).$NC Please wait..."
         rsync -aqz "$mirrorSource/$versionDownload/ChangeLog.txt" ./ChangeLog.txt
 
