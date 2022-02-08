@@ -3,6 +3,7 @@ slackware*/
 
 # ISO file(s) from a cloned folder
 slackware*.iso
+slackware*.iso.md5
 
 # Log files from mkisofs
 0_filesIgnoredInTheISO.txt
