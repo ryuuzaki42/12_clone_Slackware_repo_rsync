@@ -22,7 +22,7 @@
 #
 # Script: Clone some Slackware repository to a local source using rsync
 #
-# Last update: 08/02/2022
+# Last update: 28/10/2022
 #
 # Tip: Use this script with a "old" local mirror (or ISO) to download less files
 #
@@ -157,7 +157,7 @@ else
     if [ -e $versionDownload/ ]; then
         echo -e "$CYAN\\nOlder folder download found ($GREEN$versionDownload/$CYAN)$NC"
 
-        echo -en "$CYAN\\nDownloading$BLUE ChangeLog.txt$CYAN to make a$BLUE fast check$CYAN ($BLUE local$GREEN "
+        echo -en "$CYAN\\nDownloading$BLUE ChangeLog.txt$CYAN to make a$BLUE fast check$CYAN (${BLUE}local$GREEN "
         echo -en "ChangeLog.txt$CYAN with the$BLUE server$GREEN ChangeLog.txt$CYAN).$NC Please wait..."
         rsync -aqz "$mirrorSource/$versionDownload/ChangeLog.txt" ./ChangeLog.txt
 
