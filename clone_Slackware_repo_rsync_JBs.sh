@@ -22,7 +22,7 @@
 #
 # Script: Clone some Slackware repository to a local source using rsync
 #
-# Last update: 28/10/2022
+# Last update: 14/12/2022
 #
 # Tip: Use this script with a "old" local mirror (or ISO) to download less files
 #
@@ -44,6 +44,8 @@ fi
 if [ "$input1" == "testColor" ]; then
     echo -e "\\n\\tTest colors: $RED RED $WHITE WHITE $PINK PINK $BLACK BLACK $BLUE BLUE $GREEN GREEN $CYAN CYAN $NC NC\\n"
 fi
+
+echo -e "\\n$CYAN # Clone some Slackware repository to a local source using rsync #$NC\\n"
 
 mirrorSource="rsync://slackware.uk/slackware"
 echo -e "$CYAN\\nDefault mirror:$GREEN $mirrorSource$NC"
@@ -117,7 +119,7 @@ if [ "$onlyPatches" == 'y' ]; then
     echo -en "$RED only the patches$CYAN of"
 fi
 
-echo -en "$GREEN\"$versionDownload\"$RED with"
+echo -en "$GREEN \"$versionDownload\"$RED with"
 if [ "$downloadSource" != 'y' ]; then
     echo -n "out"
 fi
@@ -134,12 +136,12 @@ if [ "$contineRsync" == 'n' ]; then
     echo -e "$CYAN\\nJust exiting by user choice$NC\\n"
 else
     if [ "$downloadSource" != 'y' ]; then
-        removeSoure="--exclude={'source/','patches/source/','pasture/source/'}"
+        removeSoure="--exclude={'source/','patches/source/','pasture/source/','extra/source/','testing/source/'}"
         grepRemove=$removeSoure
     fi
 
     if [ "$downloadTesting" != 'y' ]; then
-        removeTesting="--exclude \"testing/\""
+        removeTesting="--exclude={'testing/'}"
         grepRemove=$grepRemove$removeTesting
     fi
 
