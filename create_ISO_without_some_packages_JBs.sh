@@ -22,12 +22,12 @@
 #
 # Script: Create a ISO without some package from a local directory that you don't want
 #
-# Last update: 04/02/2022
+# Last update: 14/12/2022
 #
-# Tip: Add the packages you want in the packagesList
-# Need one space before add more
+# Tip: Add the packages you want in the $packagesList
+# Obs.: Need one space before add more
 #
-echo -e "\\nThis script create a ISO file from a clone folder of Slackware\\n"
+echo -e "\\nCreate a ISO file from a clone folder of Slackware\\n"
 
 folderWork=$1
 if [ "$folderWork" == '' ]; then
@@ -43,7 +43,7 @@ else
 
     if [ "$usePackagesList" == '' ] || [ "$usePackagesList" == '2' ]; then
         usePackagesList=2
-        echo -e "\\nUsing packagesList"
+        echo -e "\\n # Using \$packagesList #"
 
         ## Add packages that you want in the packagesList
         ## Need one space before add more
@@ -56,6 +56,8 @@ else
         kjumpingcube kmines knetwalk kdiamond ksudoku kubrick picmi bovo kblackbox kfourinline
         kmahjongg kreversi ksquares kigo kiriki kshisen killbots klickety klines konquest ksirk
         knavalbattle kanagram amor kajongg xsnow libgtop"
+
+        packagesList="$packagesList /patches/ /source/ testing/ extra/"
 
         # Remove knights gnuchess
         packagesList="$packagesList knights gnuchess"
@@ -86,11 +88,19 @@ else
         # Remove nepomuk
         packagesList="$packagesList nepomuk-core nepomuk-widgets"
 
-        # Remove akonadi
-        packagesList="$packagesList akonadi"
+        # Remove akonadi* akonadiconsole kalarm
+        packagesList="$packagesList akonadi akonadi-calendar akonadi-calendar-tools akonadi-contacts
+        akonadi-notes akonadi-import-wizard akonadi-mime akonadi-search akonadiconsole kalarm"
+
+        # Remove digikam need akonadi-contacts
+        packagesList="$packagesList digikam"
 
         # Remove kde-l10n- - others languages for the KDE
         packagesList="$packagesList kde-l10n-"
+
+        # Remove some added to XFCE
+        packagesList="$packagesList elementary-xfce gnome-themes-extra xfce4-panel-profiles
+        xfce4-screensaver xfce4-whiskermenu-plugin thunar mousepad Greybird"
 
         echo -e "\\nRemove \"gnome packages\"? \"gcr- polkit-gnome gnome-themes libgnome-keyring gnome-keyring\""
         echo "Recommended if you remove XFCE, but leave if you not remove XFCE."
@@ -107,13 +117,25 @@ else
 
         # Remove other packages
         packagesList="$packagesList seamonkey pidgin xchat dragon thunderbird kplayer
-        calligra xine-lib xine-ui emacs amarok audacious vim-gvim vim sendmail-cf sendmail xpdf kget"
+        calligra xine-lib xine-ui emacs amarok audacious sendmail-cf sendmail xpdf kget"
+
+        # Dolphin need baloo baloo-widgets
+        #packagesList="$packagesList baloo-widgets"
+
+        # xxd (to see file as binary - xxd -b file - is in vim
+        packagesList="$packagesList vim-gvim vim"
+
+        # KDE5 (ktown AlienBob) - AC Power need the bluez-qt
+        #packagesList="$packagesList bluez-qt"
 
         # Remove tetex (Slackware 14.2) / texlive (Slackware 15.0 and Current)
         packagesList="$packagesList tetex-doc tetex texlive"
 
         # Remove Bluetooth
         #packagesList="$packagesList bluedevil blueman bluez-firmware bluez"
+
+        # Remove kleopatra
+        packagesList="$packagesList kleopatra"
 
         # Virtualbox need # Remove kernel-source
         #packagesList="$packagesList kernel-source"
@@ -122,7 +144,7 @@ else
         echo -e "\\nPackages that will be removed:\\n"
         for packageName in $packagesList; do
             echo -n "$packageName "
-            if [ "$countI" == "8" ]; then
+            if [ "$countI" == "5" ]; then
                 echo
                 countI='0'
             else
