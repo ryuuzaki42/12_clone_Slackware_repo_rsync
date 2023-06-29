@@ -22,9 +22,12 @@
 #
 # Script: Clone some Slackware repository to a local source using rsync
 #
-# Last update: 19/06/2023
+# Last update: 29/06/2023
 #
 # Tip: Use this script with a "old" local mirror (or ISO) to download less files
+#
+# To run the script without any question, run as:
+# echo | ./clone_Slackware_repo_rsync_JBs.sh
 #
 input1=$1
 if [ "$input1" == "noColor" ]; then
