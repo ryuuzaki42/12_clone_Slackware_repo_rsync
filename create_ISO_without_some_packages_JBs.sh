@@ -2,7 +2,7 @@
 #
 # Autor= João Batista Ribeiro
 # Bugs, Agradecimentos, Criticas "construtivas"
-# Mande me um e-mail. Ficarei Grato!
+# me envie um e-mail. Ficarei Grato!
 # e-mail: joao42lbatista@gmail.com
 #
 # Este programa é um software livre; você pode redistribui-lo e/ou
