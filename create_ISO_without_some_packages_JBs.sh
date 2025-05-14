@@ -22,7 +22,7 @@
 #
 # Script: Create a ISO without some package from a local directory that you don't want
 #
-# Last update: 19/06/2023
+# Last update: 14/05/2025
 #
 # Tip: Add the packages you want in the $packagesList
 # Obs.: Need one space before add more
@@ -92,8 +92,8 @@ else
         packagesList="$packagesList akonadi akonadi-calendar akonadi-calendar-tools akonadi-contacts
         akonadi-notes akonadi-import-wizard akonadi-mime akonadi-search akonadiconsole kalarm"
 
-        # Remove digikam need akonadi-contacts
-        packagesList="$packagesList digikam"
+        # Remove digikam need akonadi-contacts, and krita
+        packagesList="$packagesList digikam krita"
 
         # Remove kde-l10n- - others languages for the KDE
         packagesList="$packagesList kde-l10n-"
