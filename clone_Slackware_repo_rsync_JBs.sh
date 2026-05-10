@@ -140,7 +140,7 @@ if [ "$downloadTesting" != 'y' ]; then
     echo -n "out"
 fi
 echo -e "$CYAN the$BLUE \"testing/\"$CYAN from $GREEN\"$mirrorSource\""
-echo -en "${CYAN}Want continue?$NC(y)es - (n)o $GREEN(press enter to yes):$NC "
+echo -en "${CYAN}Want continue?$NC (y)es - (n)o $GREEN(press enter to yes):$NC "
 read -r contineRsync
 
 if [ "$contineRsync" == 'n' ]; then
@@ -152,7 +152,7 @@ else
     fi
 
     if [ "$downloadTesting" != 'y' ]; then
-        removeTesting="--exclude={'testing/'}"
+        removeTesting="--exclude=testing/" # One folder not use "{", "}" and "'"
         grepRemove=$grepRemove$removeTesting
     fi
 
@@ -227,7 +227,7 @@ else
     fi
 
     if [ "$contineOrJump" == 'y' ]; then
-        rsyncCommand="rsync -ahv --delete --progress $removeSoure $removeTesting $onlyPatchesDl $mirrorSource/$versionDownload ./"
+        rsyncCommand="rsync -ahv --delete --progress $removeSoure $removeTesting $onlyPatchesDl $removeOldKernels $mirrorSource/$versionDownload ./"
 
         # -a archive mode, equivalent to -rlptgoD - recursion and want to preserve almost everything
         # -h output numbers in a human-readable format; -v increase verbosity
