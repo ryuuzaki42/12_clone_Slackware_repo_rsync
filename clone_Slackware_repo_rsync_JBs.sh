@@ -163,6 +163,10 @@ else
 
     # Remove "--exclude", " ", "={", "," and "}" form grepRemove
     grepRemove=$(echo "$grepRemove" | sed 's/\-\-exclude//g'| sed 's/ //g' | sed 's/={//g' | sed 's/,//g' | sed 's/}//g')
+    if [ "$downloadOldKernels" != 'y' ]; then
+        removeOldKernels="--exclude=patches/packages/old-linux-*/" # One folder not use "{" and "}"
+        grepRemove=$grepRemove$removeOldKernels
+    fi
 
     # Change """, "'" and "||" in "|" and remove "^|" and "$|"
     grepRemove=$(echo "$grepRemove" | sed 's/"/|/g' | sed 's/'\''/|/g' | sed 's/||/|/g' | sed 's/^|//g' | sed 's/|$//g' )
@@ -236,7 +240,9 @@ else
 
         echo -en "$CYAN\nDownloading files.$NC Please wait...\n\n"
         echo "$rsyncCommand"
+        set -x
         eval "$rsyncCommand"
+        set +x
     fi
 
     if [ "$tmpMd5sumBeforeDownload" != '' ]; then
