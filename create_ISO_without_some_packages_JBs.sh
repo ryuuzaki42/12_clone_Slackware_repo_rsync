@@ -187,15 +187,15 @@ else
     commandGenISOPart0="mkisofs -o \"../${isoFileName}.iso\" "
     commandGenISOPart2=""
 
-    commandGenISOPart1="-R -J -V \"Slackware-current DVD\" \
+    commandGenISOPart1="-R -J -V \"$folderWork DVD\" \
 -hide-rr-moved -hide-joliet-trans-tbl \
 -v -d -N -no-emul-boot -boot-load-size 4 -boot-info-table \
 -sort isolinux/iso.sort \
 -b isolinux/isolinux.bin \
 -c isolinux/isolinux.boot \
--preparer \"Slackware-current build for x86_64 by ryuuzaki42 <github.com/ryuuzaki42/12_clone_Slackware_repo_rsync>\" \
+-preparer \"$folderWork build by ryuuzaki42 <github.com/ryuuzaki42/12_clone_Slackware_repo_rsync>\" \
 -publisher \"The Slackware Linux Project - http://www.slackware.com/\" \
--A \"Slackware-current DVD - build $dateISO\" "
+-A \"$folderWork DVD - build $dateISO\" "
 
     commandGenISOPart3="-eltorito-alt-boot -no-emul-boot -eltorito-platform 0xEF -eltorito-boot isolinux/efiboot.img \
 ."
