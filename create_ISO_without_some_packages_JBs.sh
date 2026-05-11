@@ -22,7 +22,7 @@
 #
 # Script: Create a ISO without some package from a local directory that you don't want
 #
-# Last update: 14/05/2025
+# Last update: 11/05/2026
 #
 # Tip: Add the packages you want in the $packagesList
 # Obs.: Need one space before add more
@@ -224,9 +224,9 @@ else
         if [ "$usePackagesList" == 2 ]; then
             echo -e "Take a look in the files:\n"
             echo "$(pwd)/"
-            echo -e "\t\t $(echo $mkisofsExcludeList | cut -d '/' -f2)"
-            echo -e "\t\t $(echo $filesIgnoredInTheISO | cut -d '/' -f2)"
-            echo -e "\t\t $(find "$(echo $filesNotFound | cut -d '/' -f2)" 2> /dev/null | rev | cut -d '/' -f1 | rev)"
+            echo -e "\t\t $(echo "$mkisofsExcludeList" | cut -d '/' -f2)"
+            echo -e "\t\t $(echo "$filesIgnoredInTheISO" | cut -d '/' -f2)"
+            echo -e "\t\t $(find "$(echo "$filesNotFound" | cut -d '/' -f2)" 2> /dev/null | rev | cut -d '/' -f1 | rev)"
         fi
     else
         commandGenISO=$commandGenISOPart0$commandGenISOPart1$commandGenISOPart3
