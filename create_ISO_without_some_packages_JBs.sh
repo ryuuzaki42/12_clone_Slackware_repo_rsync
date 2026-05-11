@@ -230,6 +230,6 @@ else
         fi
     else
         commandGenISO=$commandGenISOPart0$commandGenISOPart1$commandGenISOPart3
-        echo -e "\n\nExiting...\n\nIf you want create a ISO file, use:\n\ncd $localISO/\n\n$commandGenISO\n"
+        echo -e "\n\nExiting...\n\nIf you want create a ISO file, use:\n\ncd $localISO/$folderWork\n\n$commandGenISO\n"
     fi
 fi
