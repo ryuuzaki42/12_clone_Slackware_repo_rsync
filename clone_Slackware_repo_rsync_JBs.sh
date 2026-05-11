@@ -22,7 +22,7 @@
 #
 # Script: Clone some Slackware repository to a local source using rsync
 #
-# Last update: 10/05/2026
+# Last update: 11/05/2026
 #
 # Tip: Use this script with a "old" local mirror (or ISO) to download less files
 #
@@ -100,12 +100,12 @@ if echo "$versionSlackware" | grep -qv "current"; then # If not Slackware curren
         else
             echo -en "\n$BLUE# Downloading all the files #\n$NC"
         fi
+    fi
 
-        echo -en "$CYAN\nWant download the old kernels - \"patches/packages/old-linux-*\"?$NC\n(y)es - (n)o $GREEN(press enter to no):$NC "
-        read -r downloadOldKernels
-        if [ "$downloadOldKernels" == '' ] || [ "$downloadOldKernels" == 'n' ]; then
-            echo -en "\n$BLUE# Not downloading old kernels #\n$NC"
-        fi
+    echo -en "$CYAN\nWant download the old kernels - \"patches/packages/old-linux-*\"?$NC\n(y)es - (n)o $GREEN(press enter to no):$NC "
+    read -r downloadOldKernels
+    if [ "$downloadOldKernels" == '' ] || [ "$downloadOldKernels" == 'n' ]; then
+        echo -en "\n$BLUE# Not downloading old kernels #\n$NC"
     fi
 fi
 
