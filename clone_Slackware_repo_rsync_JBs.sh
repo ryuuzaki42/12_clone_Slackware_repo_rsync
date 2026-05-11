@@ -103,7 +103,7 @@ if echo "$versionSlackware" | grep -qv "current"; then # If not Slackware curren
 
         echo -en "$CYAN\nWant download the old kernels - \"patches/packages/old-linux-*\"?$NC\n(y)es - (n)o $GREEN(press enter to no):$NC "
         read -r downloadOldKernels
-        if [ "$downloadOldKernels" == '' ] || [ "$onlyPatches" == 'n' ]; then
+        if [ "$downloadOldKernels" == '' ] || [ "$downloadOldKernels" == 'n' ]; then
             echo -en "\n$BLUE# Not downloading old kernels #\n$NC"
         fi
     fi
