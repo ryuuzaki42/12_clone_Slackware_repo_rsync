@@ -351,7 +351,7 @@ else
         commandGenISO=$commandGenISOPart1$commandGenISOPart3
 
     if [ "$generateISO" == 'y' ]; then
-        olderIsoSlackware=$(ls "slackware*iso")
+        olderIsoSlackware=$(ls slackware*iso 2> /dev/null)
 
         if [ "$olderIsoSlackware" != '' ]; then
             echo -e "$CYAN\nOlder ISO file Slackware found:$GREEN $olderIsoSlackware$NC"
@@ -364,7 +364,6 @@ else
         fi
 
         echo -e "\nCreating ISO file. Please wait..."
-
         echo -e "\nRunning:\n$commandGenISO\n"
         eval "$commandGenISO"
 
