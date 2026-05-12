@@ -152,8 +152,10 @@ else
     fi
 
     if [ "$downloadTesting" != 'y' ]; then
-        removeTesting="--exclude=testing/" # One folder not use "{", "}" and "'"
-        grepRemove=$grepRemove$removeTesting
+        if [ "$onlyPatches" != 'y' ]; then # If $onlyPatches == y, "testing/" will be added to be excluded
+            removeTesting="--exclude=testing/" # One folder not use "{", "}" and "'"
+            grepRemove=$grepRemove$removeTesting
+        fi
     fi
 
     if [ "$onlyPatches" == 'y' ]; then
