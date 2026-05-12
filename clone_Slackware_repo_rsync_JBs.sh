@@ -22,7 +22,7 @@
 #
 # Script: Clone some Slackware repository to a local source using rsync
 #
-# Last update: 11/05/2026
+# Last update: 12/05/2026
 #
 # Tip: Use this script with a "old" local mirror (or ISO) to download less files
 #
@@ -166,11 +166,11 @@ else
         grepRemove=$grepRemove$removeOldKernels
     fi
 
-    # Remove "--exclude", "=", "{", "*/", "," and "}" form grepRemove
-    grepRemove=$(echo "$grepRemove" | sed 's/\-\-exclude//g'| sed 's/=//g' | sed 's/{//g' | sed 's/*\///g' | sed 's/,//g' | sed 's/}//g')
+    # Remove "=", "{", "*/", "," and "}" and change "--exclude" to "'" form grepRemove
+    grepRemove=$(echo "$grepRemove" | sed 's/\-\-exclude/'\''/g' | sed 's/=//g' | sed 's/{//g' | sed 's/*\///g' | sed 's/,//g' | sed 's/}//g')
 
     # Change """, "'" and "||" in "|" and remove "^|" and "$|"
-    grepRemove=$(echo "$grepRemove" | sed 's/"/|/g' | sed 's/'\''/|/g' | sed 's/||/|/g' | sed 's/^|//g' | sed 's/|$//g' )
+    grepRemove=$(echo "$grepRemove" | sed 's/"/|/g' | sed 's/'\''/|/g' | sed 's/||/|/g' | sed 's/^|//g' | sed 's/|$//g')
 
     if [ -e "$versionDownload/" ]; then
         echo -e "$CYAN\nOlder folder download found ($GREEN$versionDownload/$CYAN)$NC"
