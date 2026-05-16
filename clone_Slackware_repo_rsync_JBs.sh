@@ -22,7 +22,7 @@
 #
 # Script: Clone some Slackware repository to a local source using rsync
 #
-# Last update: 12/05/2026
+# Last update: 16/05/2026
 #
 # Tip: Use this script with a "old" local mirror (or ISO) to download less files
 #
@@ -168,7 +168,7 @@ else
         grepRemove=$grepRemove$removeOldKernels
     fi
 
-    # Remove "=", "{", "*/", "," and "}" and change "--exclude" to "'" form grepRemove
+    # Remove "=", "{", "*/", "," and "}", also change "--exclude" to "'" form $grepRemove
     grepRemove=$(echo "$grepRemove" | sed 's/\-\-exclude/'\''/g; s/=//g; s/{//g; s/*\///g; s/,//g; s/}//g')
 
     # Change """, "'" and "||" in "|" and remove "^|" and "$|"
