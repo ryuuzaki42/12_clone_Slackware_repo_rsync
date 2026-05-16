@@ -169,10 +169,10 @@ else
     fi
 
     # Remove "=", "{", "*/", "," and "}" and change "--exclude" to "'" form grepRemove
-    grepRemove=$(echo "$grepRemove" | sed 's/\-\-exclude/'\''/g' | sed 's/=//g' | sed 's/{//g' | sed 's/*\///g' | sed 's/,//g' | sed 's/}//g')
+    grepRemove=$(echo "$grepRemove" | sed 's/\-\-exclude/'\''/g; s/=//g; s/{//g; s/*\///g; s/,//g; s/}//g')
 
     # Change """, "'" and "||" in "|" and remove "^|" and "$|"
-    grepRemove=$(echo "$grepRemove" | sed 's/"/|/g' | sed 's/'\''/|/g' | sed 's/||/|/g' | sed 's/^|//g' | sed 's/|$//g')
+    grepRemove=$(echo "$grepRemove" | sed 's/"/|/g; s/'\''/|/g; s/||/|/g; s/^|//g; s/|$//g')
 
     if [ -e "$versionDownload/" ]; then
         echo -e "$CYAN\nOlder folder download found ($GREEN$versionDownload/$CYAN)$NC"
